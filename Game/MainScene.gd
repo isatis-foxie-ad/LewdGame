@@ -144,7 +144,8 @@ func addDynamicCharacter(character, printDebug = true):
 	dynamicCharacters[newCharID] = character
 	dynamicCharactersNode.add_child(character)
 	if(printDebug):
-		Log.print("addDynamicCharacter(): Adding "+str(newCharID)+" character "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("addDynamicCharacter(): Adding "+str(newCharID)+" character "+Util.getStackFunction())
 		
 func removeDynamicCharacter(characterID, printDebug = true):
 	if(!(characterID is String)):
@@ -152,7 +153,8 @@ func removeDynamicCharacter(characterID, printDebug = true):
 	
 	if(dynamicCharacters.has(characterID)):
 		if(printDebug):
-			Log.print("removeDynamicCharacter(): Removing "+str(characterID)+" character")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.print("removeDynamicCharacter(): Removing "+str(characterID)+" character")
 		removeDynamicCharacterFromAllPools(characterID)
 		RS.onCharDelete(characterID)
 		IS.deletePawn(characterID)
@@ -160,7 +162,8 @@ func removeDynamicCharacter(characterID, printDebug = true):
 		dynamicCharacters[characterID].queue_free()
 		dynamicCharacters.erase(characterID)
 	else:
-		Log.print("removeDynamicCharacter(): Tried to remove "+str(characterID)+" character but it doesn't exist")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("removeDynamicCharacter(): Tried to remove "+str(characterID)+" character but it doesn't exist")
 
 func addDynamicCharacterToPool(characterID, poolID:String):
 	if(!(characterID is String)):
@@ -297,7 +300,8 @@ func runScene(id, _args = [], parentSceneUniqueID = -1,tag:String=""):
 		scene.parentSceneUniqueID = parentSceneUniqueID
 	add_child(scene)
 	sceneStack.append(scene)
-	Log.print("Starting scene id="+str(id)+" Args="+str(_args))
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("Starting scene id="+str(id)+" Args="+str(_args))
 	
 	allowExecuteOnce = true
 	scene.initScene(_args)
@@ -329,7 +333,8 @@ func removeScene(scene, args = []):
 			sceneStack.erase(scene)
 	
 	if(sceneStack.size() == 0):
-		Log.print("Error: no more scenes in the scenestack")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("Error: no more scenes in the scenestack")
 		gameUI.clearText()
 		gameUI.clearButtons()
 		gameUI.say("Error: no more scenes in the scenestack. Please let the developer know")
@@ -366,7 +371,8 @@ func _on_GameUI_on_option_button(method, args):
 	
 func pickOption(method, args):
 	GM.PROFILE.start("pickOption")
-	Log.print("- Picked '"+str(method)+"' Args="+str(args))
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("- Picked '"+str(method)+"' Args="+str(args))
 	rollbacker.notifyMadeChoice()
 	
 	IS.resetExtraText()
@@ -659,7 +665,8 @@ func loadDynamicCharactersData(data):
 			addDynamicCharacter(newDynamicChar, false)
 			newDynamicChar.loadData(SAVE.loadVar(charData, "data", {}))
 		else:
-			Log.printerr("loadDynamicCharactersData() Trying to load a non-dynamic character with id "+str(characterID))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("loadDynamicCharactersData() Trying to load a non-dynamic character with id "+str(characterID))
 	
 func addMessage(text: String):
 	messages.append(text)
@@ -690,7 +697,11 @@ func stopProcessingUnusedCharacters():
 	if(internal_stopProcShift >= batchesAmount):
 		internal_stopProcShift = 0
 	
-	#Log.print("internal_stopProcShift: "+str(internal_stopProcShift))
+	if OPTIONS.isMainLoggingEnabled():
+		#Log.print("internal_stopProcShift: "+str(internal_stopProcShift))
+		pass
+
+
 	for _i in range(MAX_STOP_PROCESS_CHAR_CHECK):
 		var _ii:int = _i * batchesAmount + internal_stopProcShift
 		var _indx:int = charAm - _ii - 1
@@ -702,7 +713,8 @@ func stopProcessingUnusedCharacters():
 		if(character):
 			character.updateNonBattleEffects()
 		if(!character || !character.shouldBeUpdated()):
-			print("STOPPED PROCESSING: "+str(charID))
+			if OPTIONS.isMainLoggingEnabled():
+				print("STOPPED PROCESSING: "+str(charID))
 			charactersToUpdate.remove(_indx)
 			if(character):
 				character.onStoppedProcessing()
@@ -716,7 +728,8 @@ func stopProcessingUnusedCharacters():
 #		if(character != null):
 #			character.updateNonBattleEffects()
 #		if(character == null || !character.shouldBeUpdated()):
-#			print("STOPPED PROCESSING: "+str(charID))
+#			if OPTIONS.isMainLoggingEnabled():
+#				print("STOPPED PROCESSING: "+str(charID))
 #			charactersToUpdate.erase(charID)
 #			if(character != null):
 #				character.onStoppedProcessing()
@@ -733,7 +746,8 @@ func processTime(_seconds):
 
 func doTimeProcess(_seconds:int):
 	if(_seconds < 0):
-		Log.printerr("doTimeProcess() called with a negative amount of seconds! _seconds="+str(_seconds))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("doTimeProcess() called with a negative amount of seconds! _seconds="+str(_seconds))
 		return
 	
 	GM.PROFILE.start("doTimeProcess")
@@ -878,24 +892,28 @@ func setFlag(flagID, value):
 		return
 	
 	if(!flagsCache.has(flagID)):
-		Log.printerr("setFlag(): Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("setFlag(): Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
 		return
 	
 	if("type" in flagsCache[flagID]):
 		var flagType = flagsCache[flagID]["type"]
 		if(!FlagType.isCorrectType(flagType, value)):
-			Log.printerr("setFlag(): Wrong type for flag "+str(flagID)+". Value: "+str(value)+" "+Util.getStackFunction())
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("setFlag(): Wrong type for flag "+str(flagID)+". Value: "+str(value)+" "+Util.getStackFunction())
 			return
 			
 	flags[flagID] = value
 
 func hasDatapackFlag(datapackID, flagID):
 	if(!loadedDatapacks.has(datapackID)):
-		Log.printerr("hasDatapackFlag(): Trying to check a flag "+str(flagID)+" of a datapack that wasn't loaded: "+str(datapackID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("hasDatapackFlag(): Trying to check a flag "+str(flagID)+" of a datapack that wasn't loaded: "+str(datapackID))
 		return
 	var datapack:Datapack = GlobalRegistry.getDatapack(datapackID)
 	if(datapack == null):
-		Log.printerr("hasDatapackFlag(): Datapack "+str(datapackID)+" isn't found "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("hasDatapackFlag(): Datapack "+str(datapackID)+" isn't found "+Util.getStackFunction())
 		return
 		
 	if(!datapack.flags.has(flagID)):
@@ -904,28 +922,34 @@ func hasDatapackFlag(datapackID, flagID):
 
 func setDatapackFlag(datapackID, flagID, value):
 	if(!loadedDatapacks.has(datapackID)):
-		Log.printerr("setDatapackFlag(): Trying to set a flag "+str(flagID)+" of a datapack that wasn't loaded: "+str(datapackID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("setDatapackFlag(): Trying to set a flag "+str(flagID)+" of a datapack that wasn't loaded: "+str(datapackID))
 		return
 	
 	# Check if value is the right type
 	var datapack:Datapack = GlobalRegistry.getDatapack(datapackID)
 	if(datapack == null):
-		Log.printerr("setDatapackFlag(): Datapack "+str(datapackID)+" isn't found "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("setDatapackFlag(): Datapack "+str(datapackID)+" isn't found "+Util.getStackFunction())
 		return
 		
 	if(!datapack.flags.has(flagID)):
-		Log.printerr("setDatapackFlag(): Datapack is "+str(datapackID)+". Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("setDatapackFlag(): Datapack is "+str(datapackID)+". Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
 		return
 	
 	var flagType = datapack.flags[flagID]["type"]
 	if(flagType == DatapackSceneVarType.BOOL && !(value is bool)):
-		Log.printerr("setDatapackFlag(): Trying to assign a '"+str(value)+"' value to a BOOLEAN flag "+str(flagID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("setDatapackFlag(): Trying to assign a '"+str(value)+"' value to a BOOLEAN flag "+str(flagID))
 		return
 	if(flagType == DatapackSceneVarType.STRING && !(value is String)):
-		Log.printerr("setDatapackFlag(): Trying to assign a '"+str(value)+"' value to a STRING flag "+str(flagID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("setDatapackFlag(): Trying to assign a '"+str(value)+"' value to a STRING flag "+str(flagID))
 		return
 	if(flagType == DatapackSceneVarType.NUMBER && !(value is int) && !(value is float)):
-		Log.printerr("setDatapackFlag(): Trying to assign a '"+str(value)+"' value to a NUMBER flag "+str(flagID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("setDatapackFlag(): Trying to assign a '"+str(value)+"' value to a NUMBER flag "+str(flagID))
 		return
 		
 	if(!datapackFlags.has(datapackID)):
@@ -939,16 +963,19 @@ func clearDatapackFlag(datapackID, flagID):
 
 func getDatapackFlag(datapackID, flagID, defaultValue = null):
 	if(!loadedDatapacks.has(datapackID)):
-		Log.printerr("getDatapackFlag(): Datapack "+str(datapackID)+" wasn't loaded "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getDatapackFlag(): Datapack "+str(datapackID)+" wasn't loaded "+Util.getStackFunction())
 		return defaultValue
 	
 	var datapack:Datapack = GlobalRegistry.getDatapack(datapackID)
 	if(datapack == null):
-		Log.printerr("getDatapackFlag(): Datapack "+str(datapackID)+" isn't found "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getDatapackFlag(): Datapack "+str(datapackID)+" isn't found "+Util.getStackFunction())
 		return defaultValue
 	
 	if(!datapack.flags.has(flagID)):
-		Log.printerr("getDatapackFlag(): Datapack is "+str(datapackID)+". Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getDatapackFlag(): Datapack is "+str(datapackID)+". Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
 		return defaultValue
 	
 	if(!datapackFlags.has(datapackID) || !datapackFlags[datapackID].has(flagID)):
@@ -1014,7 +1041,8 @@ func getFlag(flagID, defaultValue = null):
 		return getDatapackFlag(splitData2[0], splitData2[1], defaultValue)
 	
 	if(!flagsCache.has(flagID)):
-		Log.printerr("getFlag(): Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getFlag(): Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
 		return defaultValue
 	
 	if(!flags.has(flagID)):
@@ -1025,20 +1053,23 @@ func getFlag(flagID, defaultValue = null):
 func setModuleFlag(moduleID, flagID, value):
 	var modules = GlobalRegistry.getModules()
 	if(!modules.has(moduleID)):
-		Log.printerr("getModuleFlag(): Module "+str(moduleID)+" doesn't exist "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getModuleFlag(): Module "+str(moduleID)+" doesn't exist "+Util.getStackFunction())
 		return
 	
 	var module:Module = modules[moduleID]
 	var moduleFlagsCache = module.getFlagsCache()
 	
 	if(!moduleFlagsCache.has(flagID)):
-		Log.printerr("setModuleFlag(): Module is "+str(moduleID)+". Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("setModuleFlag(): Module is "+str(moduleID)+". Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
 		return
 	
 	if("type" in moduleFlagsCache[flagID]):
 		var flagType = moduleFlagsCache[flagID]["type"]
 		if(!FlagType.isCorrectType(flagType, value)):
-			Log.printerr("setModuleFlag(): Module is "+str(moduleID)+". Wrong type for flag "+str(flagID)+". Value: "+str(value)+" "+Util.getStackFunction())
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("setModuleFlag(): Module is "+str(moduleID)+". Wrong type for flag "+str(flagID)+". Value: "+str(value)+" "+Util.getStackFunction())
 			return
 	
 	if(!moduleFlags.has(moduleID)):
@@ -1052,14 +1083,16 @@ func increaseModuleFlag(moduleID, flagID, addvalue = 1):
 func getModuleFlag(moduleID, flagID, defaultValue = null):
 	var modules = GlobalRegistry.getModules()
 	if(!modules.has(moduleID)):
-		Log.printerr("getModuleFlag(): Module "+str(moduleID)+" doesn't exist "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getModuleFlag(): Module "+str(moduleID)+" doesn't exist "+Util.getStackFunction())
 		return defaultValue
 	
 	var module:Module = modules[moduleID]
 	var moduleFlagsCache = module.getFlagsCache()
 	
 	if(!moduleFlagsCache.has(flagID)):
-		Log.printerr("getModuleFlag(): Module is "+str(moduleID)+". Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getModuleFlag(): Module is "+str(moduleID)+". Detected the usage of an unknown flag: "+str(flagID)+" "+Util.getStackFunction())
 		return defaultValue
 	
 	if(!moduleFlags.has(moduleID) || !moduleFlags[moduleID].has(flagID)):
@@ -1154,7 +1187,8 @@ func getRandomSceneFor(sceneType):
 		if(moduleScenes == null || !(moduleScenes is Array)):
 			continue
 		if(moduleScenes.size() > 0 && !(moduleScenes[0] is Array)):
-			Log.printerr("Module "+str(moduleID)+" returns bad getRandomSceneFor() data")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Module "+str(moduleID)+" returns bad getRandomSceneFor() data")
 			continue
 		resultScenes.append_array(moduleScenes)
 	
@@ -1714,7 +1748,8 @@ func getDebugActions():
 	]
 
 func doDebugAction(id, args = {}):
-	print(id, " ", args)
+	if OPTIONS.isMainLoggingEnabled():
+		print(id, " ", args)
 	
 	if(id == "allowMainRouteReset"):
 		GM.main.MRH.allowCanRestart(true)
@@ -1894,7 +1929,8 @@ func doDebugAction(id, args = {}):
 		if(item.canCombine()):
 			item.setAmount(args["amount"]) 
 			GM.pc.getInventory().addItem(item)
-			Log.print("Item "+item.getStackName()+" added to player")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.print("Item "+item.getStackName()+" added to player")
 		else:
 			GM.pc.getInventory().addItem(item)
 			args["amount"] -= 1
@@ -1902,7 +1938,9 @@ func doDebugAction(id, args = {}):
 				item = GlobalRegistry.createItem(args["itemID"])
 				GM.pc.getInventory().addItem(item)
 				args["amount"] -= 1
-			Log.print("Item "+item.getStackName()+" added to player")
+
+			if OPTIONS.isMainLoggingEnabled():
+				Log.print("Item "+item.getStackName()+" added to player")
 		
 	elif(id == "openConsole"):
 		Console.toggleConsole()
@@ -2036,7 +2074,8 @@ func consoleBecome(charID):
 		return
 	var character = getCharacter(charID)
 	if character == null:
-		Log.printerr("ERROR: character with the id "+charID+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: character with the id "+charID+" wasn't found")
 		return
 	if character == GM.pc:
 		return
@@ -2115,7 +2154,8 @@ func updateCharacterUntilNow(charID:String):
 func startUpdatingCharacter(charID):
 	if(!charactersToUpdate.has(charID)):
 		charactersToUpdate.append(charID)
-		print("BEGAN PROCESSING "+str(charID))
+		if OPTIONS.isMainLoggingEnabled():
+			print("BEGAN PROCESSING "+str(charID))
 		var character = getCharacter(charID)
 		if(character != null):
 			character.processUntilTime(currentDay, timeOfDay)
@@ -2213,11 +2253,13 @@ func loadDatapack(datapackID):
 	var theDatapack:Datapack = GlobalRegistry.getDatapack(datapackID)
 	
 	if(theDatapack == null):
-		Log.printerr("Trying to load a datapack that doesn't exist in the global registry: "+str(datapackID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to load a datapack that doesn't exist in the global registry: "+str(datapackID))
 		return false
 	
 	if(loadedDatapacks.has(datapackID)):
-		Log.printerr("Trying to load a datapack that was already loaded: "+str(datapackID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to load a datapack that was already loaded: "+str(datapackID))
 		return false
 	
 	loadedDatapacks[datapackID] = true
@@ -2240,7 +2282,8 @@ func loadDatapackAndDependencies(datapackID, checked={}):
 	var theDatapack:Datapack = GlobalRegistry.getDatapack(datapackID)
 	
 	if(theDatapack == null):
-		Log.printerr("Trying to load a datapack that doesn't exist in the global registry: "+str(datapackID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to load a datapack that doesn't exist in the global registry: "+str(datapackID))
 		return
 	
 	var requiredDatapacks = theDatapack.requiredDatapacks
@@ -2283,7 +2326,8 @@ func addDatapackCharacter(theDatapack:Datapack, datapackChar:DatapackCharacter):
 
 func unloadDatapack(datapackID):
 	if(!loadedDatapacks.has(datapackID)):
-		Log.printerr("Trying to unload a datapack that was never loaded: "+str(datapackID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to unload a datapack that was never loaded: "+str(datapackID))
 		return false
 	
 	if(datapackCharacters.has(datapackID)):
@@ -2300,12 +2344,14 @@ func unloadDatapack(datapackID):
 
 func reloadDatapack(datapackID):
 	if(!loadedDatapacks.has(datapackID)):
-		Log.printerr("Trying to reload a datapack that was never loaded: "+str(datapackID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to reload a datapack that was never loaded: "+str(datapackID))
 		return false
 	
 	var theDatapack:Datapack = GlobalRegistry.getDatapack(datapackID)
 	if(theDatapack == null):
-		Log.printerr("Trying to reload a datapack that doesn't exist in the global registry: "+str(datapackID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to reload a datapack that doesn't exist in the global registry: "+str(datapackID))
 		return false
 	
 	for charID in theDatapack.characters:
@@ -2366,7 +2412,8 @@ func stopDungeonRun():
 
 func startPlayerSlavery(_slaveryID:String, storeInv:bool = false):
 	if(PS):
-		Log.printerr("Trying to start player slavery while one is running already!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to start player slavery while one is running already!")
 		return
 	
 	var theDef = GlobalRegistry.getPlayerSlaveryDef(_slaveryID)
@@ -2375,7 +2422,8 @@ func startPlayerSlavery(_slaveryID:String, storeInv:bool = false):
 	
 	var theSlavery = theDef.createSlavery()
 	if(!theSlavery):
-		Log.printerr("Slavery Def didn't gave the game a slavery object!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Slavery Def didn't gave the game a slavery object!")
 		return
 	
 	if(storeInv):
@@ -2385,7 +2433,8 @@ func startPlayerSlavery(_slaveryID:String, storeInv:bool = false):
 	PS.onSlaveryStart()
 	var theStartSceneID:String = PS.getStartScene()
 	if(theStartSceneID == ""):
-		Log.printerr("Player slavery didn't give us a start scene!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Player slavery didn't give us a start scene!")
 		return
 	runScene(theStartSceneID)
 

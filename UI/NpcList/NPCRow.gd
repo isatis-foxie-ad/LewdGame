@@ -45,7 +45,8 @@ func setSpecialRelationship(_name:String, _color:Color):
 
 func setNpcID(ID: String):
 	if(ID == ""):
-		Log.error("Exception: attempt to set an empty character ID")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("Exception: attempt to set an empty character ID")
 	else:
 		_npcID = ID
 
@@ -53,8 +54,9 @@ func setNpcID(ID: String):
 func getNpcID():
 	if(_npcID != null):
 		return _npcID
-	else: 
-		Log.error("Exception: NPCRow: character ID was not set")
+	else:
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("Exception: NPCRow: character ID was not set")
 
 
 func getNpcName():
@@ -75,7 +77,8 @@ func getAmountOfChildren() -> int:
 
 func _on_Forget_pressed():
 	if(_npcID == null):
-		Log.error("Exception: Attempt to delete null character in the NPC list")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("Exception: Attempt to delete null character in the NPC list")
 	else:
 		emit_signal("onForgetButtonPressed", _npcID, getNpcName(), self)
 

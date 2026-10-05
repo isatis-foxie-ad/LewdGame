@@ -129,7 +129,8 @@ func getInfo(_indx:int=-1) -> SexInfoBase:
 	if(_indx < 0):
 		return tempInfo
 	if(!actorsTemp || (_indx >= actorsTemp.size())):
-		Log.printerr("SexReactionHandler.getInfo() the index wasn't provided! ActorsTemp="+str(actorsTemp)+", indx="+str(_indx))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("SexReactionHandler.getInfo() the index wasn't provided! ActorsTemp="+str(actorsTemp)+", indx="+str(_indx))
 		return null
 	return activityTemp.getDomOrSubInfo(actorsTemp[_indx])
 

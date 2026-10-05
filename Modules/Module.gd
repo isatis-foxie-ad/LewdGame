@@ -213,7 +213,8 @@ func getMenuButtons() -> Array:
 	return []
 
 func onMenuButton(_buttonID:String, _menuScene):
-	Log.print("Module:"+id+" Pressed menu button: "+_buttonID)
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("Module:"+id+" Pressed menu button: "+_buttonID)
 
 #	# An example of how to show some screen on top of the menu
 #	var someGame = load("res://Game/Minigames/Struggling/StrugglingGame.tscn").instance()

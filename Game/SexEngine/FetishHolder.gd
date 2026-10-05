@@ -126,7 +126,8 @@ func loadData(data):
 		for fetishID in newfetishMap:
 			var fetishObject = GlobalRegistry.getFetish(fetishID)
 			if(fetishObject == null):
-				Log.printerr("Removing fetish that doesn't exist: "+str(fetishID))
+				if OPTIONS.isMainLoggingEnabled():
+					Log.printerr("Removing fetish that doesn't exist: "+str(fetishID))
 				continue
 			var theValue = newfetishMap[fetishID]
 			if(theValue is String):

@@ -76,7 +76,8 @@ func loadData(data):
 		var filteredStats = {}
 		for statID in newstats:
 			if(!PersonalityStat.statExists(statID)):
-				Log.print("Personality stat with id "+str(statID) + " wasn't found, skipping")
+				if OPTIONS.isMainLoggingEnabled():
+					Log.print("Personality stat with id "+str(statID) + " wasn't found, skipping")
 				continue
 			filteredStats[statID] = newstats[statID]
 		newstats = filteredStats

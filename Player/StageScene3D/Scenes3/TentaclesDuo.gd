@@ -124,7 +124,8 @@ func playAnimation(animID, _args = {}):
 			#$Chair2.visible = true
 		
 		if(!stateMachineTravel(doll, state_machine, fullNpcAnimID)):
-			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 	else:
 		stateMachineTravel(doll, state_machine, "stand")
 

@@ -37,7 +37,8 @@ func _http_request_completed(_result, _response_code, _headers, _body):
 	if(jsonResult.error != OK):
 		printerr(jsonResult)
 	else:
-		print(jsonResult.result)
+		if OPTIONS.isMainLoggingEnabled():
+			print(jsonResult.result)
 	pass
 
 func fixLang(theLang):
@@ -135,7 +136,8 @@ func translate(_targetLanguage, _inputText):
 	if(!translateData.has("result") || !translateData["result"].has("texts")):
 		theResult["success"] = false
 		theResult["errorMessage"] = "No result in json"
-		print(translateData)
+		if OPTIONS.isMainLoggingEnabled():
+			print(translateData)
 		return
 	
 	var theActualResultTexts = []

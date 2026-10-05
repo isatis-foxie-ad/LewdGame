@@ -16,7 +16,8 @@ func _ready():
 #		animationTree["parameters/CuffsBlend/blend_amount"] = 0.0
 	
 func playAnimation(animID, _args = {}):
-	print("Playing urinal: "+str(animID))
+	if OPTIONS.isMainLoggingEnabled():
+		print("Playing urinal: "+str(animID))
 	
 	if(_args.has("pc")):
 		doll.prepareCharacter(_args["pc"])
@@ -39,7 +40,8 @@ func playAnimation(animID, _args = {}):
 	elif(animID == "idle2"):
 		state_machine.travel("UrinalIdle2-loop")
 	else:
-		Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 
 func getSupportedStates():
 	return ["idle", "idle2"]

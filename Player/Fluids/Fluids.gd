@@ -133,7 +133,8 @@ func transferTo(otherFluids, fraction = 0.5, minAmount = 0.0, causerID:String = 
 			assert(false, "Bad fluids object")
 	
 	if(otherFluids == null):
-		Log.printerr("transferTo() null Fluids object encountered")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("transferTo() null Fluids object encountered")
 		return 0.0
 	
 	if(minAmount > 0.0 && getFluidAmount() > 0.0):
@@ -163,7 +164,8 @@ func transferAmountTo(otherFluids, howMuch, causerID:String = ""):
 			assert(false, "Bad fluids object")
 	
 	if(otherFluids == null):
-		Log.printerr("transferAmountTo() null Fluids object encountered")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("transferAmountTo() null Fluids object encountered")
 		return 0.0
 	
 	var fluidAmount = getFluidAmount()
@@ -193,7 +195,8 @@ func shareFluids(otherFluids, fraction = 0.5, causerID:String = ""):
 			assert(false, "Bad fluids object")
 	
 	if(otherFluids == null):
-		Log.printerr("shareFluids() null Fluids object encountered")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("shareFluids() null Fluids object encountered")
 		return false
 	
 	var result = false

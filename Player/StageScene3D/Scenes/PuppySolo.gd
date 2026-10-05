@@ -39,7 +39,8 @@ func playAnimation(animID, _args = {}):
 	
 	var state_machine = animationTree["parameters/StateMachine/playback"]
 	if(!stateMachineTravelPuppy(doll, state_machine, animID)):
-		Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 
 func getSupportedStates():
 	return getSupportedStatesPuppy()

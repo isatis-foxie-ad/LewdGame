@@ -10,11 +10,13 @@ static func convertFlag(flags:Dictionary, moduleFlags:Dictionary, moduleID, flag
 	
 	moduleFlags[moduleID][flagID] = flags[flagID]
 	var _ok = flags.erase(flagID)
-	Log.print("COVERTED FLAG "+str(flagID)+" FROM GLOBAL TO MODULE "+str(moduleID))
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("COVERTED FLAG "+str(flagID)+" FROM GLOBAL TO MODULE "+str(moduleID))
 
 
 static func fixFlagsFromVersion1(_main, data):
-	Log.print("CONVERTING FLAGS FROM VERSION 1")
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("CONVERTING FLAGS FROM VERSION 1")
 	var flags:Dictionary = SAVE.loadVar(data, "flags", {})
 	var moduleFlags = SAVE.loadVar(data, "moduleFlags", {})
 	
@@ -103,4 +105,5 @@ static func fixFlagsFromVersion1(_main, data):
 		for flagID in flagsToFix[moduleID]:
 			convertFlag(flags, moduleFlags, moduleID, flagID)
 
-	Log.print("FINISHED CONVERTING FLAGS FROM VERSION 1")
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("FINISHED CONVERTING FLAGS FROM VERSION 1")

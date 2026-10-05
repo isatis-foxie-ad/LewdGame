@@ -25,7 +25,8 @@ func _on_ModBrowser_visibility_changed():
 		downloadedMods = true
 		var error = http_request.request("https://raw.githubusercontent.com/Alexofp/BDCCMods/main/allmods.json")
 		if error != OK:
-			Log.printerr("[ModBrowser] An error occurred in the HTTP request.")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("[ModBrowser] An error occurred in the HTTP request.")
 
 func resetMods():
 	pickedModEntry = null
@@ -46,12 +47,14 @@ func updateModList(modsArray = allMods):
 
 func _on_HTTPRequest_request_completed(result, _response_code, _headers, body):
 	if result != HTTPRequest.RESULT_SUCCESS:
-		Log.printerr("[ModBrowser] Couldn't download mods data from github")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[ModBrowser] Couldn't download mods data from github")
 		return
 	
 	var jsonResult = JSON.parse(body.get_string_from_utf8())
 	if(jsonResult.error != OK):
-		Log.printerr("[ModBrowser] Couldn't parse json data from github.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[ModBrowser] Couldn't parse json data from github.")
 		return
 	
 	var modsData = jsonResult.result
@@ -139,21 +142,25 @@ func _on_DownloadModButton_pressed():
 	http_request_mod.download_file = GlobalRegistry.getModsFolder().plus_file(fileName)
 	var error = http_request_mod.request(pickedModEntry.download)
 	if error != OK:
-		Log.printerr("[ModBrowser] An error occurred in the HTTP request.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[ModBrowser] An error occurred in the HTTP request.")
 		showMessage("An error occurred in the HTTP request.")
 	else:
-		Log.print("Downloading mod: "+str(pickedModEntry.download))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("Downloading mod: "+str(pickedModEntry.download))
 
 
 func _on_HTTPRequestMod_request_completed(result, _response_code, _headers, _body):
 	downloadingContainer.visible = false
 
 	if result != HTTPRequest.RESULT_SUCCESS:
-		Log.printerr("[ModBrowser] Couldn't download mod")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[ModBrowser] Couldn't download mod")
 		showMessage("Couldn't download mod")
 		return
 	
-	Log.print("Mod downloaded")
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("Mod downloaded")
 
 func showMessage(text):
 	messageDialog.dialog_text = text

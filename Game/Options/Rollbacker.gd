@@ -81,12 +81,15 @@ func rollback():
 	needsExtraRollback = true
 	
 	if(rollbackStates.empty()):
-		Log.error("Something went wrong, rollbacker doesn't have a state to rollback to.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("Something went wrong, rollbacker doesn't have a state to rollback to.")
 		return
 	
-	Log.print("ROLLBACK")
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("ROLLBACK")
 	rollbacking = true
 	SAVE.loadData(rollbackStates.back())
 	rollbackStates.pop_back()
 	rollbacking = false
-	Log.print("ROLLBACK FINISHED")
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("ROLLBACK FINISHED")

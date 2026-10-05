@@ -48,7 +48,8 @@ func checkSocialEventShouldStartTarget(_charActor:String, _charTarget:String, _e
 	var _affectionRaw:float = affection(_charActor)
 	var _minAffection:float = SocialEventMinimalAffection[_eventID] if SocialEventMinimalAffection.has(_eventID) else 1.0
 	if(_affectionRaw > _minAffection):
-		print("[NEMESIS debug] RAW NEMESIS CHANCE: AFFECTION TOO HIGH")
+		if OPTIONS.isMainLoggingEnabled():
+			print("[NEMESIS debug] RAW NEMESIS CHANCE: AFFECTION TOO HIGH")
 		return [false]
 	
 	var _affectionSlide:float = SocialEventType.AFFECTION_BONUS[_eventID] if SocialEventType.AFFECTION_BONUS.has(_eventID) else 0.0
@@ -79,7 +80,8 @@ func checkSocialEventShouldStartTarget(_charActor:String, _charTarget:String, _e
 		nemesisChance *= (1.0 - _fetish)
 		nemesisChance *= 1.0 + Util.maxi(woundedAmount-1, 0)
 	
-	print("[NEMESIS debug] RAW NEMESIS CHANCE: "+str(nemesisChance))
+	if OPTIONS.isMainLoggingEnabled():
+		print("[NEMESIS debug] RAW NEMESIS CHANCE: "+str(nemesisChance))
 	
 	if(nemesisChance > 70.0):
 		nemesisChance = 100.0
@@ -112,7 +114,8 @@ func onNewDay():
 	gonnaAmbush = RNG.chance(ambushChance)
 	if(gonnaAmbush):
 		anger *= 0.2
-		print("[NEMESIS debug] AMBUSH WILL HAPPEN TODAY")
+		if OPTIONS.isMainLoggingEnabled():
+			print("[NEMESIS debug] AMBUSH WILL HAPPEN TODAY")
 
 func getCooldown() -> int:
 	return 10

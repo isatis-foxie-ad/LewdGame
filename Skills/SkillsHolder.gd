@@ -84,7 +84,8 @@ func loadData(data):
 		
 		var newskill = GlobalRegistry.createSkill(skillID)
 		if(newskill == null):
-			Log.printerr("Skill with id "+skillID+" couldn't be loaded because it wasn't found in the registry")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Skill with id "+skillID+" couldn't be loaded because it wasn't found in the registry")
 			continue
 		
 		newskill.setCharacter(npc)
@@ -99,7 +100,8 @@ func loadData(data):
 		
 		var newperk = GlobalRegistry.createPerk(perkID)
 		if(newperk == null):
-			Log.printerr("Perk with id "+perkID+" couldn't be loaded because it wasn't found in the registry")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Perk with id "+perkID+" couldn't be loaded because it wasn't found in the registry")
 			continue
 		
 		newperk.setCharacter(npc)

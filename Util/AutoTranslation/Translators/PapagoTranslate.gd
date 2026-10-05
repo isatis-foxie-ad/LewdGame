@@ -38,7 +38,8 @@ func _ready():
 	req.request("https://openapi.naver.com/v1/papago/n2mt", theheaders, true, HTTPClient.METHOD_POST, stuffToSend)
 
 func _http_request_completed(_result, _response_code, _headers, _body):
-	print(_body.get_string_from_utf8())
+	if OPTIONS.isMainLoggingEnabled():
+		print(_body.get_string_from_utf8())
 	pass
 
 func translate(_targetLanguage, _inputText):

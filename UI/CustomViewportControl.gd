@@ -48,7 +48,8 @@ func getPixelSize():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
-#	print(str(viewport.get_node("Camera2D").get_camera_screen_center()))
+#	if OPTIONS.isMainLoggingEnabled():
+#		print(str(viewport.get_node("Camera2D").get_camera_screen_center()))
 	#var currentWindowSize = OS.window_size
 
 	#print(get_viewport().is_size_override_enabled()," ", currentWindowSize)

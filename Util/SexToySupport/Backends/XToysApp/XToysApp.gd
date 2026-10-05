@@ -87,10 +87,13 @@ func onDisabled():
 func logDebug(_text:String):
 	if(!DEBUG_XTOYSAPP):
 		return
-	Log.print("["+id+"] "+str(_text))
+		
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("["+id+"] "+str(_text))
 
 func logError(_text:String):
-	Log.printerr("["+id+"] "+str(_text))
+	if OPTIONS.isMainLoggingEnabled():
+		Log.printerr("["+id+"] "+str(_text))
 	lastErrors.append(_text)
 
 #	sendToButtplugIO("OutputCmd", {

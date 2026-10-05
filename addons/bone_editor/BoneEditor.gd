@@ -137,7 +137,8 @@ func _add_bone_tracks( animation:Animation ):
 		if founded_bone_tracks.find( path ) == -1:
 			var new_track_idx:int = animation.add_track( Animation.TYPE_TRANSFORM )
 			animation.track_set_path( new_track_idx, path )
-			print( "added new track for ", path )
+			if OPTIONS.isMainLoggingEnabled():
+				print( "added new track for ", path )
 
 func _save_poses_to_animation( animation:Animation ):
 	var time:float = self.animation_player.current_animation_position
@@ -165,7 +166,8 @@ func _save_poses_to_animation( animation:Animation ):
 			target_bone.pose.basis.get_rotation_quat( ),
 			target_bone.pose.basis.get_scale( )
 		)
-		print( "* added new key for ", target_bone.name )
+		if OPTIONS.isMainLoggingEnabled():
+			print( "* added new key for ", target_bone.name )
 
 func copy_stuff():
 	if(skeleton == null):

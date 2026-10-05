@@ -92,7 +92,8 @@ static func getFilesInFolder(folder):
 				result.append(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 	return result
 
 static func getFilesInFoldersRecursive(folder: String, ignoreBaseDir = false):
@@ -114,7 +115,8 @@ static func getFilesInFoldersRecursive(folder: String, ignoreBaseDir = false):
 				pass
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 	
 	return result
 
@@ -641,7 +643,8 @@ static func removeDirectory(path):
 		# Remove current path
 		directory.remove(path)
 	else:
-		print("Error removing " + path)
+		if OPTIONS.isMainLoggingEnabled():
+			print("Error removing " + path)
 
 static func removeFile(path):
 	var directory = Directory.new()
@@ -760,8 +763,9 @@ static func sanitizePlayerEnteredString(inputStr:String, emptyStr:String=""):
 
 static func remapValue(theValue:float, minValue:float, maxValue:float, newMinValue:float, newMaxValue:float) -> float:
 	if(minValue == maxValue):
-		#assert(false, "remapValue got bad min and max values")
-		Log.error("remapValue got bad min and max values")
+		if OPTIONS.isMainLoggingEnabled():
+			#assert(false, "remapValue got bad min and max values")
+			Log.error("remapValue got bad min and max values")
 		return 0.0
 	var percentage:float = (theValue - minValue) / (maxValue - minValue)
 	
@@ -818,18 +822,21 @@ static func tryFixColor(_colorVal, allowNull:bool = true):
 		if(allowNull):
 			return null
 		else:
-			Log.printerr("Null color detected in tryFixColor: "+str(_colorVal))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Null color detected in tryFixColor: "+str(_colorVal))
 			return Color.black
 	if(_colorVal is Color):
 		return _colorVal
 	if(!(_colorVal is String)):
-		Log.printerr("Bad color detected in tryFixColor: "+str(_colorVal))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Bad color detected in tryFixColor: "+str(_colorVal))
 		return Color.black
 	
 	if("," in _colorVal):
 		var nums:Array = _colorVal.split(",")
 		if(nums.size() != 3 && nums.size() != 4):
-			Log.printerr("Bad color detected in tryFixColor: "+str(_colorVal))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Bad color detected in tryFixColor: "+str(_colorVal))
 			return Color.black
 		var rVal:float = float(nums[0])
 		var gVal:float = float(nums[1])
@@ -901,7 +908,8 @@ const ANDROID_SAVE_PATH := "/sdcard/Android/data/org.rahimew.bdcc/files/"
 
 static func getAndroidSaveFolder() -> String:
 	if(OS.get_name() != "Android"):
-		Log.error("Calling getAndroidSaveFolder() when not on android!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("Calling getAndroidSaveFolder() when not on android!")
 		return "user://"
 	var theDir := Directory.new()
 	

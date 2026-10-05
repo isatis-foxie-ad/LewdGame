@@ -130,7 +130,8 @@ func translateDict(_textsByID:Dictionary) -> Dictionary:
 	
 	var theTranslatedText:String = yield(translate(theBigText), "completed")
 	if(theTranslatedText.empty()):
-		Log.printerr("Translator failed to translate")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Translator failed to translate")
 		return _textsByID
 	
 	var theSplitByLines:Array = theTranslatedText.split("\n")
@@ -151,7 +152,8 @@ func translateDict(_textsByID:Dictionary) -> Dictionary:
 			savedLines.append(theLine)
 	
 	if(result.size() != _textsByID.size()):
-		Log.printerr("Something went wrong during translation")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Something went wrong during translation")
 		for theID in _textsByID:
 			if(!result.has(theID)):
 				result[theID] = _textsByID[theID]
@@ -159,10 +161,11 @@ func translateDict(_textsByID:Dictionary) -> Dictionary:
 	return result
 
 func translate(inputText:String) -> String:
-	if(DEBUG_TRANSLATION):
-		print(" == SENT TO TRANSLATOR ==")
-		print(inputText)
-		print(" == END ==")
+	if OPTIONS.isMainLoggingEnabled():
+		if(DEBUG_TRANSLATION):
+			print(" == SENT TO TRANSLATOR ==")
+			print(inputText)
+			print(" == END ==")
 	
 	statusText = ""
 	hadToUseFallback = false
@@ -216,14 +219,15 @@ func translate(inputText:String) -> String:
 	for translator in usedTranslators:
 		translator.afterTranslate()
 		
-	if(DEBUG_TRANSLATION):
-		print(" == USED TRANSLATORS ==")
-		for translator in usedTranslators:
-			print(translator.id)
-		print(" == RECEIVED ==")
-		for theLine in theResultedArray:
-			print(theLine)
-		print(" == END ==")
+	if OPTIONS.isMainLoggingEnabled():
+		if(DEBUG_TRANSLATION):
+			print(" == USED TRANSLATORS ==")
+			for translator in usedTranslators:
+				print(translator.id)
+			print(" == RECEIVED ==")
+			for theLine in theResultedArray:
+				print(theLine)
+			print(" == END ==")
 	
 	statusText = Util.join(usedTranslatorsNames, ",")
 	return join(theResultedArray, "\n")
@@ -316,14 +320,16 @@ func saveToFile():
 func loadFromFile():
 	var save_game = File.new()
 	if not save_game.file_exists(configFilePath):
-		print("AutoTranslation: No saved options found, default values will be used")
+		if OPTIONS.isMainLoggingEnabled():
+			print("AutoTranslation: No saved options found, default values will be used")
 		return
 	
 	save_game.open(configFilePath, File.READ)
 	#var saveData = parse_json(save_game.get_as_text())
 	var jsonResult = JSON.parse(save_game.get_as_text())
 	if(jsonResult.error != OK):
-		Log.printerr("AutoTranslation: Error while loading the options file, the file is not a valid json")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("AutoTranslation: Error while loading the options file, the file is not a valid json")
 		return
 	
 	var saveData = jsonResult.result

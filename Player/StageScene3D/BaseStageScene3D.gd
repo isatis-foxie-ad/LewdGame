@@ -16,7 +16,8 @@ func playAnimationFinal(animID, _args = {}):
 	currentAnim = animID
 
 func playAnimation(animID, _args = {}):
-	print("Playing: "+str(animID))
+	if OPTIONS.isMainLoggingEnabled():
+		print("Playing: "+str(animID))
 
 func updateSubAnims():
 	pass

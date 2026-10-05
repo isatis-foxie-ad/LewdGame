@@ -85,7 +85,8 @@ func playAnimation(animID, _args = {}):
 	
 	var state_machine = animationTree["parameters/AnimationNodeStateMachine/playback"]
 	if(!stateMachineTravel(doll, state_machine, fullAnimID)):
-		Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 	
 	if(_args.has("npcAction")):
 		var npcAnimID = _args["npcAction"]
@@ -95,7 +96,8 @@ func playAnimation(animID, _args = {}):
 		
 		var state_machine2 = animationTree2["parameters/StateMachine/playback"]
 		if(!stateMachineTravelPuppy(doll2, state_machine2, fullNpcAnimID)):
-			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 	else:
 		var state_machine2 = animationTree2["parameters/StateMachine/playback"]
 		stateMachineTravelPuppy(doll2, state_machine2, "stand")

@@ -13,10 +13,12 @@ func register(_GES:GameExtenderSystem):
 
 func pcUpdateNonBattleEffects(_pc:Player):
 	# Adds a 'wounded' status effect at every update
-	print("TEEEST "+_pc.getName())
+	if OPTIONS.isMainLoggingEnabled():
+		print("TEEEST "+_pc.getName())
 	_pc.addEffect(StatusEffect.Wounded)
 
 func npcUpdateNonBattleEffects(_npc:Character):
-	print("NPC TEEEST "+_npc.getName())
+	if OPTIONS.isMainLoggingEnabled():
+		print("NPC TEEEST "+_npc.getName())
 	_npc.addEffect(StatusEffect.Wounded)
 

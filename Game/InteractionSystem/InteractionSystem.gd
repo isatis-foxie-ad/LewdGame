@@ -44,7 +44,8 @@ func loadData(_data):
 	var pawnData = SAVE.loadVar(_data, "pawns", {})
 	for charID in pawnData:
 		if(charID == "" || GlobalRegistry.getCharacter(charID) == null):
-			Log.printerr("Unable to load pawn with character id "+str(charID)+" as the character is missing!")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Unable to load pawn with character id "+str(charID)+" as the character is missing!")
 			continue
 		var pawnEntry:Dictionary = SAVE.loadVar(pawnData, charID, {})
 		
@@ -65,12 +66,14 @@ func loadData(_data):
 		
 		var interaction = GlobalRegistry.createInteraction(interactionID)
 		if(interaction == null):
-			Log.printerr("Unable to load interaction with the id "+str(interactionID)+" because it's not registered.")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Unable to load interaction with the id "+str(interactionID)+" because it's not registered.")
 			continue
 		interaction.loadData(SAVE.loadVar(interactionEntry, "data", {}))
 		
 		if(interaction.hasMissingCharacters()):
-			Log.printerr("Unable to load interaction with the id "+str(interactionID)+" because it has missing characters.")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Unable to load interaction with the id "+str(interactionID)+" because it has missing characters.")
 			continue
 		interactions.append(interaction)
 
@@ -147,7 +150,8 @@ func decideNextAction(interaction, _context:Dictionary = {}):
 	var actions = interaction.getActionsFinal()
 	
 	if(actions == null || !(actions is Array) || actions.size() <= 0):
-		Log.printerr("No actions found for interaction: "+str(interaction.id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("No actions found for interaction: "+str(interaction.id))
 		return
 	
 	var maxScore:float = 0.0
@@ -164,7 +168,8 @@ func decideNextAction(interaction, _context:Dictionary = {}):
 			possibleActions.append([action, action["finalScore"]])
 	
 	if(possibleActions.size() <= 0):
-		Log.printerr("No possible actions found for interaction: "+str(interaction.id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("No possible actions found for interaction: "+str(interaction.id))
 		interaction.setPickedAction(RNG.pick(actions), _context)
 		return
 	

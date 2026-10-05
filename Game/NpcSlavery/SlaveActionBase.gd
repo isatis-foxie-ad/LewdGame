@@ -144,7 +144,8 @@ func doActionSimpleFinal(_slaveID, _extraSlavesIDs = {}):
 	return doActionSimple(_slaveID, _extraSlavesIDs)
 
 func reactSceneResult(_slaveID, _extraSlavesIDs = {}, _sceneResult = {}):
-	print("REACT SCENE RESULT")
+	if OPTIONS.isMainLoggingEnabled():
+		print("REACT SCENE RESULT")
 	return
 
 func getSlave(_slaveID) -> NpcSlave:

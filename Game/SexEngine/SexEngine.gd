@@ -390,7 +390,8 @@ func internal_generateGoalsFor(domID:String, amountToGenerate:int, _minFetishVal
 			var randomGoalInfo = RNG.pickWeightedPairs(breedingGoals)
 			personDomInfo.goals.append(randomGoalInfo.duplicate(true))
 		
-	Log.printVerbose("Goals added to "+personDomInfo.getChar().getName()+": "+str(personDomInfo.goals))
+	if OPTIONS.isMainLoggingEnabled():
+		Log.printVerbose("Goals added to "+personDomInfo.getChar().getName()+": "+str(personDomInfo.goals))
 	personDomInfo.afterGoalsAssigned()
 	return generatedAnyGoals
 
@@ -517,7 +518,8 @@ func removeGoal(thedominfo, goalid, thesubinfo):
 
 func satisfyGoal(thedominfo, goalid, thesubinfo):
 	if(removeGoal(thedominfo, goalid, thesubinfo)):
-		print(str(thedominfo.charID)+"'s goal to "+str(goalid)+" "+str(thesubinfo.charID)+" was satisfied")
+		if OPTIONS.isMainLoggingEnabled():
+			print(str(thedominfo.charID)+"'s goal to "+str(goalid)+" "+str(thesubinfo.charID)+" was satisfied")
 		thedominfo.onGoalSatisfied(thedominfo, goalid, thesubinfo)
 		thesubinfo.onGoalSatisfied(thedominfo, goalid, thesubinfo)
 		return true
@@ -525,7 +527,8 @@ func satisfyGoal(thedominfo, goalid, thesubinfo):
 
 func failGoal(thedominfo, goalid, thesubinfo):
 	if(removeGoal(thedominfo, goalid, thesubinfo)):
-		print(str(thedominfo.charID)+"'s goal to "+str(goalid)+" "+str(thesubinfo.charID)+" was failed")
+		if OPTIONS.isMainLoggingEnabled():
+			print(str(thedominfo.charID)+"'s goal to "+str(goalid)+" "+str(thesubinfo.charID)+" was failed")
 		thedominfo.onGoalFailed(thedominfo, goalid, thesubinfo)
 		thesubinfo.onGoalFailed(thedominfo, goalid, thesubinfo)
 		return true
@@ -608,10 +611,12 @@ func checkFailedAndCompletedGoals():
 			
 			var sexGoal:SexGoalBase = GlobalRegistry.getSexGoal(goalInfo[0])
 			if(sexGoal.isCompleted(self, domInfo, subInfo, goalInfo[2])):
-				Log.printVerbose("GOAL "+str(sexGoal.getVisibleName())+" "+str(domID)+" "+str(goalInfo[1])+" got completed")
+				if OPTIONS.isMainLoggingEnabled():
+					Log.printVerbose("GOAL "+str(sexGoal.getVisibleName())+" "+str(domID)+" "+str(goalInfo[1])+" got completed")
 				domInfo.goals.remove(i)
 			elif(!sexGoal.isPossible(self, domInfo, subInfo, goalInfo[2])):
-				Log.printVerbose("GOAL "+str(sexGoal.getVisibleName())+" "+str(domID)+" "+str(goalInfo[1])+" is impossible, removed")
+				if OPTIONS.isMainLoggingEnabled():
+					Log.printVerbose("GOAL "+str(sexGoal.getVisibleName())+" "+str(domID)+" "+str(goalInfo[1])+" is impossible, removed")
 				domInfo.goals.remove(i)
 
 func removeEndedActivities():

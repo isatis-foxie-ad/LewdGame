@@ -279,19 +279,22 @@ func getSpecificFlag(_missionID:String, _flagID:String, _default = null):
 
 func setFlag(_flagID:String, _value):
 	if(current.empty()):
-		Log.printerr("TRYING TO SET A MISSION FLAG WHILE NOT ON A MISSION.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("TRYING TO SET A MISSION FLAG WHILE NOT ON A MISSION.")
 		return
 	setSpecificFlag(current, _flagID, _value)
 
 func getFlag(_flagID:String, _default = null):
 	if(current.empty()):
-		Log.printerr("TRYING TO GET A MISSION FLAG WHILE NOT ON A MISSION.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("TRYING TO GET A MISSION FLAG WHILE NOT ON A MISSION.")
 		return _default
 	return getSpecificFlag(current, _flagID, _default)
 
 func setDecision(_flagID:String, _value):
 	if(current.empty()):
-		Log.printerr("TRYING TO SET A MISSION DECISION WHILE NOT ON A MISSION.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("TRYING TO SET A MISSION DECISION WHILE NOT ON A MISSION.")
 		return
 	setDecisionSpecific(current, _flagID, _value)
 
@@ -420,7 +423,8 @@ func clearMissionMarkers():
 
 func setMissionMarkers(_Ar:Array):
 	if(!isOnMission()):
-		Log.printerr("Trying to call setMissionMarkers("+str(_Ar)+") while not on a mission!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to call setMissionMarkers("+str(_Ar)+") while not on a mission!")
 		_Ar = []
 	if(_Ar != missionMarkers):
 		missionMarkers = _Ar.duplicate()

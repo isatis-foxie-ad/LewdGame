@@ -141,7 +141,8 @@ func initCycle():
 	cycleProgress = RNG.randf_range(0.0, 1.0)
 	
 func newCycle(shouldClearNonPregEggs:bool = true):
-#	print(getCharacter().getName(), " Entered new cycle" )
+#	if OPTIONS.isMainLoggingEnabled():
+#		print(getCharacter().getName(), " Entered new cycle" )
 	if(shouldClearNonPregEggs):
 		for orificeType in OrificeType.getAll():
 			eggCells[orificeType] = []
@@ -286,9 +287,10 @@ func ovulate():
 		if(ch.hasPerk(Perk.FertilityBetterOvulation) && amountOfEggs < 10):
 			amountOfEggs += RNG.randi_range(0, 4) #otherwise species with low base eggs like humans, won't get much bonus
 		
-		print(ch.getName(), " OVULATED WITH "+str(amountOfEggs)+" AMOUNT OF EGGS")
-		#print(ch.getName(), " Bonus eggs modifier: ", ch.getEggsBonusMod() *100, "%")
-		#print(ch.getName(), " AMOUNT OF Min eggs: ", ch.getMinEggsAmount())
+		if OPTIONS.isMainLoggingEnabled():
+			print(ch.getName(), " OVULATED WITH "+str(amountOfEggs)+" AMOUNT OF EGGS")
+			#print(ch.getName(), " Bonus eggs modifier: ", ch.getEggsBonusMod() *100, "%")
+			#print(ch.getName(), " AMOUNT OF Min eggs: ", ch.getMinEggsAmount())
 		
 		for _i in range(amountOfEggs):
 			var egg := createEggCell()

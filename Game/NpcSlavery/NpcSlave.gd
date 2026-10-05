@@ -690,7 +690,8 @@ func doTrain():
 				addLove(-0.01)
 		else:
 			var workRoll = obeyMood + workEffect + RNG.randf_range(-0.7, 0.7) + float(sqrt(slaveLevel))/10.0
-			print("WORKROLL: "+str(workRoll))
+			if OPTIONS.isMainLoggingEnabled():
+				print("WORKROLL: "+str(workRoll))
 			if(workRoll < 0.0):
 				isSuccess = false
 				texts.append( currentSlaveType.getFailedTrainTextBad(getChar()) )

@@ -25,4 +25,5 @@ func _ready():
 
 # Console doesn't exist when this object is doing its thing
 func delayedLogPrint(theText:String):
-	Log.print(theText)
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print(theText)

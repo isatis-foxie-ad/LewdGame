@@ -49,7 +49,8 @@ func calculatePath(startRoomID:String, endRoomID:String):
 		if(astarIDToRoomIDMap.has(astarID)):
 			resultRooms.append(astarIDToRoomIDMap[astarID])
 		else:
-			Log.print("calculatePath() Unknown atarID "+str(astarID))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.print("calculatePath() Unknown atarID "+str(astarID))
 	
 	return resultRooms
 
@@ -290,15 +291,18 @@ func registerRoom(floorid, room):
 	var pos:Vector2 = room.getCell()
 	
 	if(hasRoom(floorid, pos)):
-		Log.printerr("Map Error: there is already a room at cell "+str(pos)+" floor: "+str(floorid)+" roomid: "+str(room.roomID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Map Error: there is already a room at cell "+str(pos)+" floor: "+str(floorid)+" roomid: "+str(room.roomID))
 		room.queue_free()
 		return
 		
 	if(!room.roomID):
-		Log.printerr("Map Error: room at "+str(pos)+" has no roomID")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Map Error: room at "+str(pos)+" has no roomID")
 	else:
 		if(roomDict.has(room.roomID)):
-			Log.printerr("Map Error: room with id "+room.roomID+" is already registered")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Map Error: room with id "+room.roomID+" is already registered")
 			room.queue_free()
 			return
 		roomDict[room.roomID] = room
@@ -529,7 +533,8 @@ func getZoneRooms(zoneID:String, fallbackRooms:Array = []) -> Array:
 	var finalZoneID:String = "zone_"+zoneID
 	
 	if(!get_tree().has_group(finalZoneID)):
-		Log.printerr("Trying to find rooms for zone that doesn't exist: "+zoneID)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to find rooms for zone that doesn't exist: "+zoneID)
 		return []
 	var result := []
 	

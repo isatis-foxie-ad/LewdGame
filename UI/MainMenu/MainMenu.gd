@@ -128,7 +128,8 @@ func findFreeShortcutKey() -> String: # Yeah, sorry
 
 func updateModuleButtons():
 	if(!grid_container): # In case something is fucked
-		Log.error("Couldn't update the module buttons, the grid reference is missing!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("Couldn't update the module buttons, the grid reference is missing!")
 		return
 	for theButton in moduleButtons:
 		theButton.queue_free()
@@ -212,26 +213,30 @@ func _on_GithubButton_pressed():
 func getNewRelease():
 	var error = http_request.request("https://api.github.com/repos/Alexofp/BDCC/releases")
 	if error != OK:
-		Log.printerr("[MainMenu] An error occurred in the HTTP request.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[MainMenu] An error occurred in the HTTP request.")
 		setGithubLabelStr("Latest github release: Error", "")
 
 func _on_HTTPRequest_request_completed(result, _response_code, _headers, body):
 	if result != HTTPRequest.RESULT_SUCCESS:
-		Log.printerr("[MainMenu] Couldn't get the latest release from github")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[MainMenu] Couldn't get the latest release from github")
 		setGithubLabelStr("Latest github release: Error", "")
 		return
 	
 	var jsonResult = JSON.parse(body.get_string_from_utf8())
 	if(jsonResult.error != OK):
-		Log.printerr("[MainMenu] Couldn't parse json data from github.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[MainMenu] Couldn't parse json data from github.")
 		setGithubLabelStr("Latest github release: Error", "")
 		return
 	
 	var releasesData = jsonResult.result
 
 	if(!(releasesData is Array)):
-		Log.printerr("[MainMenu] Bad data from github")
-		Log.printerr(body.get_string_from_utf8())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[MainMenu] Bad data from github")
+			Log.printerr(body.get_string_from_utf8())
 		setGithubLabelStr("Latest github release: Error", "")
 		return
 		

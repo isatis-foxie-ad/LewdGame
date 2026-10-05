@@ -26,7 +26,8 @@ func _ready():
 
 func setItem(theItem:ItemBase, theMode):
 	if(!theItem):
-		Log.printerr("InventoryEntry has received a bad item: "+str(theItem))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("InventoryEntry has received a bad item: "+str(theItem))
 	isFightMode = (theMode == "fight")
 	isBuy = (theMode == "buy")
 	isSell = (theMode == "sell")

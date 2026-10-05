@@ -181,7 +181,8 @@ func impregnatedBy(fluidDNA):
 	if(bigEgg):
 		generateEggTypeAndColor()
 	
-	print("EGGCELL IMPREGNATED BY "+str(fatherID)+", species: "+str(resultSpecies)+", gender: "+NpcGender.getVisibleName(resultGender), ", division: ", monozygotic, "" if causerID == "" else (" CAUSER: "+causerID))
+	if OPTIONS.isMainLoggingEnabled():
+		print("EGGCELL IMPREGNATED BY "+str(fatherID)+", species: "+str(resultSpecies)+", gender: "+NpcGender.getVisibleName(resultGender), ", division: ", monozygotic, "" if causerID == "" else (" CAUSER: "+causerID))
 
 func tryGetMainSpeciesID() -> String:
 	if(resultSpecies.empty()):

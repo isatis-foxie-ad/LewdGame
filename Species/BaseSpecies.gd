@@ -126,7 +126,8 @@ func getAllowedBodyparts():
 func getAllowedBodypartsFinal() -> Array:
 	var theResult = getAllowedBodyparts()
 	if(!(theResult is Array)):
-		Log.printerr(id+".getAllowedBodyparts() RETURNS A BAD VALUE ("+str(theResult)+"), NEEDS TO BE AN ARRAY")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr(id+".getAllowedBodyparts() RETURNS A BAD VALUE ("+str(theResult)+"), NEEDS TO BE AN ARRAY")
 		return []
 	return theResult
 

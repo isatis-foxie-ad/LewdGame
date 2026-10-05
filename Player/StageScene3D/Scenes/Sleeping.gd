@@ -31,7 +31,8 @@ func playAnimation(animID, _args = {}):
 	#if(animID is Array):
 	#	animID = animID[0]
 	
-	print("Playing sleep: "+str(animID))
+	if OPTIONS.isMainLoggingEnabled():
+		print("Playing sleep: "+str(animID))
 	var firstDoll = "pc"
 	if(_args.has("pc")):
 		firstDoll = _args["pc"]

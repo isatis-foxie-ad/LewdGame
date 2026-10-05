@@ -41,7 +41,8 @@ This text will be outputted only if you have at least 10 credits
 [[Get 1 credit, Get one credit, getCredit
 GM.pc.addCredits(1)
 if(true):
-	print(“Test test”)
+	if OPTIONS.isMainLoggingEnabled():
+		print(“Test test”)
 return
 ]]
 

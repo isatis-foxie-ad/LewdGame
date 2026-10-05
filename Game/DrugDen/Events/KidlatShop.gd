@@ -339,7 +339,8 @@ func generateItemsToSell():
 		var nextEntryID:String = RNG.pickWeightedDict(weightList if !isBetterItems() else weightBetterList)
 		
 		if(!sellList.has(nextEntryID)):
-			Log.printerr("MISSING ENTRY IN KIDLAT SHOP: "+str(nextEntryID))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("MISSING ENTRY IN KIDLAT SHOP: "+str(nextEntryID))
 			continue
 		
 		var entryInfo:Dictionary = sellList[nextEntryID]

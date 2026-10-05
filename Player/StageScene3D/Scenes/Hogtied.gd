@@ -16,7 +16,8 @@ func _ready():
 #		animationTree["parameters/CuffsBlend/blend_amount"] = 0.0
 	
 func playAnimation(animID, _args = {}):
-	print("Playing hogtied: "+str(animID))
+	if OPTIONS.isMainLoggingEnabled():
+		print("Playing hogtied: "+str(animID))
 	
 	if(_args.has("pc")):
 		doll.prepareCharacter(_args["pc"])
@@ -37,7 +38,8 @@ func playAnimation(animID, _args = {}):
 	if(animID == "idle"):
 		state_machine.travel("Hogtied-loop")
 	else:
-		Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 
 func getSupportedStates():
 	return ["idle"]

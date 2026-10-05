@@ -97,7 +97,9 @@ func provideToy(_backend, _toy) -> bool:
 			return false
 	
 	_toy.uniqueID = generateUniqueID()
-	#Log.print("NEW TOY ADDED: "+str(_toy.backendDeviceToyID))
+	if OPTIONS.isMainLoggingEnabled():
+		pass
+		#Log.print("NEW TOY ADDED: "+str(_toy.backendDeviceToyID))
 	toys.append(_toy)
 	markShouldSave()
 	emit_signal("onToyListChange")
@@ -110,7 +112,9 @@ func provideToyGet(_backend, _toy):
 			return theToy
 	
 	_toy.uniqueID = generateUniqueID()
-	#Log.print("NEW TOY ADDED: "+str(_toy.backendDeviceToyID))
+	if OPTIONS.isMainLoggingEnabled():
+		pass
+		#Log.print("NEW TOY ADDED: "+str(_toy.backendDeviceToyID))
 	toys.append(_toy)
 	markShouldSave()
 	#emit_signal("onToyListChange")
@@ -203,7 +207,8 @@ func loadFromFile():
 		
 	var jsonResult := JSON.parse(theStr)
 	if(jsonResult.error != OK):
-		Log.printerr("SexToyManager: Error while loading the options file, the file is not a valid json")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("SexToyManager: Error while loading the options file, the file is not a valid json")
 		return
 	var saveData = jsonResult.result
 	loadData(saveData)

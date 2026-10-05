@@ -40,7 +40,8 @@ func playAnimation(animID, _args = {}):
 	elif(animID == "cum"):
 		state_machine.travel("MilkingSoloCum_1-loop")
 	else:
-		Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 
 func canTransitionTo(_actionID, _args = []):
 	var firstDoll = "pc"

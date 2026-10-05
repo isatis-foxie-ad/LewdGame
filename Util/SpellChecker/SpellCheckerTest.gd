@@ -76,15 +76,20 @@ func _on_HTTPRequest_request_completed(_result, _response_code, _headers, _body)
 	spellErrors = []
 	var jsonResult = (JSON.parse(_body.get_string_from_utf8()))
 	if(jsonResult.error != OK):
-		Log.printerr(jsonResult)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr(jsonResult)
 		updateSpellErrorsList()
 		rich_text_label.text = "Error.. "+str(_response_code)
 		return
-	#print(_body.get_string_from_utf8())
+
+	if OPTIONS.isMainLoggingEnabled():
+		pass
+		#print(_body.get_string_from_utf8())
 	var resultData:Dictionary = jsonResult.result
 	
 	if(!resultData.has("corrections")):
-		Log.printerr("No corrections found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("No corrections found")
 		updateSpellErrorsList()
 		return
 	
@@ -138,7 +143,9 @@ func doFixError():
 	var newText = selectedEntry["correctedText"]
 	
 	var letterDiff:int = newText.length() - endIndex + startIndex - 1
-	#print("DIFF: "+str(letterDiff))
+	if OPTIONS.isMainLoggingEnabled():
+		pass
+		#print("DIFF: "+str(letterDiff))
 	
 	var newCurrentText = ""
 	newCurrentText += currentText.substr(0, startIndex)

@@ -54,7 +54,8 @@ func _on_ModsFolderButton_pressed():
 
 
 func _on_ImportModDialog_file_selected(path:String):
-	print(path)
+	if OPTIONS.isMainLoggingEnabled():
+		print(path)
 	var d = Directory.new()
 	d.copy(path, "user://mods/"+path.get_file())
 	if(!showedModDialog):
@@ -191,7 +192,8 @@ func _on_ConfirmationDialog_confirmed():
 			file_name = dir.get_next()
 		OPTIONS.saveToFile()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+modsFolder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+modsFolder)
 
 
 func _on_WikiButton_pressed():

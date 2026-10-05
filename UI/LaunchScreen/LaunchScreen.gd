@@ -139,14 +139,16 @@ func saveOrderIntoFile(saveData):
 func loadOrderFromFile() -> Array:
 	var save_game = File.new()
 	if not save_game.file_exists(modOrderPath):
-		print("LaunchScreen: No mod order is found")
+		if OPTIONS.isMainLoggingEnabled():
+			print("LaunchScreen: No mod order is found")
 		return []
 	
 	save_game.open(modOrderPath, File.READ)
 	#var saveData = parse_json(save_game.get_as_text())
 	var jsonResult = JSON.parse(save_game.get_as_text())
 	if(jsonResult.error != OK):
-		Log.printerr("LaunchScreen: Error while loading the mod order file, the file is not a valid json")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("LaunchScreen: Error while loading the mod order file, the file is not a valid json")
 		return []
 	
 	var saveData = jsonResult.result
@@ -319,7 +321,8 @@ func tryToPopulateFilesList():
 		else:
 			return "No '"+str(jsonFile)+"' file provided inside the mod"
 	else:
-		Log.print('Failed loading zip file')
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print('Failed loading zip file')
 		modFileList.add_item("Couldn't load any files")
 	return "Failed to load info"
 
@@ -468,7 +471,8 @@ func fillFolder(packer, folder):
 				#	child1.set_metadata(0, full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 
 func _on_ModBrowserButton_pressed():

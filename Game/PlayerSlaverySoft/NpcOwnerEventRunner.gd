@@ -108,7 +108,8 @@ func run():
 	texts.clear()
 	buttons.clear()
 	if(eventStack.empty()):
-		Log.printerr("NO EVENTS IN THE EVENT RUNNER!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("NO EVENTS IN THE EVENT RUNNER!")
 		return
 	getCurrentEvent().runCurrentState()
 
@@ -144,7 +145,8 @@ func shouldEnd() -> bool:
 
 func doAction(_action:Array) -> Array:
 	if(eventStack.empty()):
-		Log.printerr("NO EVENTS IN THE EVENT RUNNER!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("NO EVENTS IN THE EVENT RUNNER!")
 		return [NpcOwnerActionType.NOTHING]
 	return getCurrentEvent().doAction(_action[2], _action[3])
 

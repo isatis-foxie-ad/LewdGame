@@ -52,7 +52,9 @@ func updateUI():
 		return
 	
 	#toy_group_option_button.select(entry.group)
-	#print(entry.groups)
+	if OPTIONS.isMainLoggingEnabled():
+		pass
+		#print(entry.groups)
 	for _i in groupCheckboxes.size():
 		groupCheckboxes[_i].set_pressed_no_signal(entry.groups.has(_i))
 	effect_type_option_button.select(entry.type)

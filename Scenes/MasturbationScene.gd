@@ -296,7 +296,8 @@ func checkDanger():
 	var lustCombatState:LustCombatState = GM.pc.getLustCombatState()
 	var newDanger = lustCombatState.getDanger()
 	if(lustCombatState.isInPublic() && newDanger >= 1.0):
-		print("SPOTTED")
+		if OPTIONS.isMainLoggingEnabled():
+			print("SPOTTED")
 		lustCombatState.resetDanger()
 		var population = GM.pc.getLocationPopulation()
 		if(population.size() > 0):

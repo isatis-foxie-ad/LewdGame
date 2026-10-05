@@ -472,7 +472,9 @@ func _on_ConfirmActionEditButton_pressed():
 	var result = {}
 	for argID in addedEditingActionArgs:
 		result[argID] = addedEditingActionArgs[argID].getData()
-	print(result)
+
+	if OPTIONS.isMainLoggingEnabled():
+		print(result)
 	currentlyEditingAction.applyArgs(result)
 	currentlyEditingAction = null
 	updateRightPanel()
@@ -1068,7 +1070,8 @@ func removeUselessActions():
 				break
 	
 		if(!foundState):
-			print("REMOVED ACTION "+actionID+" BECAUSE ITS NOT USED ANYWHERE")
+			if OPTIONS.isMainLoggingEnabled():
+				print("REMOVED ACTION "+actionID+" BECAUSE ITS NOT USED ANYWHERE")
 			domActions.erase(actionID)
 		
 	for actionID in subActions:
@@ -1083,7 +1086,8 @@ func removeUselessActions():
 				break
 	
 		if(!foundState):
-			print("REMOVED ACTION "+actionID+" BECAUSE ITS NOT USED ANYWHERE")
+			if OPTIONS.isMainLoggingEnabled():
+				print("REMOVED ACTION "+actionID+" BECAUSE ITS NOT USED ANYWHERE")
 			subActions.erase(actionID)
 
 

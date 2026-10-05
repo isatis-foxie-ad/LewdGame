@@ -24,7 +24,8 @@ func apply(_buffHolder):
 	_buffHolder.extraFertility += (amount/100.0) * modifier
 	displayAmount = amount * modifier
 	
-#	print("Character: ", _buffHolder.getCharacter(), " FinalFertility: ", _buffHolder.extraFertility)
+#	if OPTIONS.isMainLoggingEnabled():
+#		print("Character: ", _buffHolder.getCharacter(), " FinalFertility: ", _buffHolder.extraFertility)
 
 func getBuffColor():
 	if(amount < 0):

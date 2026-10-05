@@ -76,6 +76,9 @@ var inventoryIconsSize = "small"
 var measurementUnits = "metric"
 
 var debugPanel = false
+var mainLogging = false
+var isatisLogging = false
+var modLogging = false
 var showMapArt = false
 var developerCommentary = false
 
@@ -137,6 +140,9 @@ func resetToDefaults():
 	requireDoubleTapOnMobile = false
 	uiButtonSize = 0
 	debugPanel = false
+	mainLogging = false
+	isatisLogging = false
+	modLogging = false
 	showMapArt = false
 	#imagePackOrder = []
 	showCharacterArt = true
@@ -256,9 +262,20 @@ func shouldRequireDoubleTapOnMobile():
 func getUiButtonSize():
 	return uiButtonSize
 
+
 func isDebugPanelEnabled():
 	return debugPanel
 
+func isMainLoggingEnabled():
+	return mainLogging
+
+func isIsatisLoggingEnabled():
+	return isatisLogging
+
+func isModLoggingEnabled():
+	return modLogging
+
+	
 func shouldShowCharacterArt():
 	return showCharacterArt
 
@@ -1058,6 +1075,30 @@ func getChangeableOptions():
 					"value": debugPanel,
 					"tab": TAB_GAME,
 				},
+				{
+					"name": "Main Logging",
+					"description": "Enable base game logs",
+					"id": "mainLogging",
+					"type": "checkbox",
+					"value": mainLogging,
+					"tab": TAB_GAME,
+				},
+				{
+					"name": "Isatis Logging",
+					"description": "Enable isatis game logs",
+					"id": "isatisLogging",
+					"type": "checkbox",
+					"value": isatisLogging,
+					"tab": TAB_GAME,
+				},
+				{
+					"name": "Mod Logging",
+					"description": "Enable mod logs",
+					"id": "modLogging",
+					"type": "checkbox",
+					"value": modLogging,
+					"tab": TAB_GAME,
+				},
 			]
 		},
 	]
@@ -1250,6 +1291,12 @@ func applyOption(categoryID, optionID, value):
 	if(categoryID == "debug"):
 		if(optionID == "debugPanel"):
 			debugPanel = value
+		if(optionID == "mainLogging"):
+			mainLogging = value
+		if(optionID == "isatisLogging"):
+			isatisLogging = value
+		if(optionID == "modLogging"):
+			modLogging = value
 	
 	if(categoryID == "rollback"):
 		if(optionID == "rollbackEnabled"):
@@ -1263,7 +1310,8 @@ func applyOption(categoryID, optionID, value):
 			
 	if(categoryID == "enabledContent"):
 		enabledContent[optionID] = value
-	print("SETTING "+categoryID+":"+optionID+" TO "+str(value))
+	if OPTIONS.isMainLoggingEnabled():
+		print("SETTING "+categoryID+":"+optionID+" TO "+str(value))
 
 func applySettingsEffect():
 	checkScreenOrientation()
@@ -1400,6 +1448,9 @@ func saveData():
 		"measurementUnits": measurementUnits,
 		"requireDoubleTapOnMobile": requireDoubleTapOnMobile,
 		"debugPanel": debugPanel,
+		"mainLogging": mainLogging,
+		"isatisLogging": isatisLogging,
+		"modLogging": modLogging,
 		"imagePackOrder": imagePackOrder,
 		"showCharacterArt": showCharacterArt,
 		"showSceneArt": showSceneArt,
@@ -1467,6 +1518,9 @@ func loadData(data):
 	measurementUnits = loadVar(data, "measurementUnits", "metric")
 	requireDoubleTapOnMobile = loadVar(data, "requireDoubleTapOnMobile", false)
 	debugPanel = loadVar(data, "debugPanel", false)
+	mainLogging = loadVar(data, "mainLogging", false)
+	isatisLogging = loadVar(data, "isatisLogging", false)
+	modLogging = loadVar(data, "modLogging", false)
 	imagePackOrder = loadVar(data, "imagePackOrder", [])
 	showCharacterArt = loadVar(data, "showCharacterArt", true)
 	showSceneArt = loadVar(data, "showSceneArt", true)
@@ -1513,14 +1567,16 @@ func saveToFile():
 func loadFromFile():
 	var save_game = File.new()
 	if not save_game.file_exists(optionsFilepath):
-		print("GlobalOptions: No saved options found, default values will be used")
+		if OPTIONS.isMainLoggingEnabled():
+			print("GlobalOptions: No saved options found, default values will be used")
 		return
 	
 	save_game.open(optionsFilepath, File.READ)
 	#var saveData = parse_json(save_game.get_as_text())
 	var jsonResult = JSON.parse(save_game.get_as_text())
 	if(jsonResult.error != OK):
-		Log.printerr("GlobalOptions: Error while loading the options file, the file is not a valid json")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("GlobalOptions: Error while loading the options file, the file is not a valid json")
 		return
 	
 	var saveData = jsonResult.result
@@ -1529,14 +1585,17 @@ func loadFromFile():
 
 func loadVar(data: Dictionary, key, nullvalue = null):
 	if(!data.has(key)):
-		Log.printerr("Warning: Options file doesn't have key "+key+". Using "+str(nullvalue)+" as default value. File: "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Warning: Options file doesn't have key "+key+". Using "+str(nullvalue)+" as default value. File: "+Util.getStackFunction())
 		return nullvalue
 		
 	if(nullvalue != null && typeof(data[key]) != typeof(nullvalue) && !(typeof(data[key]) == TYPE_REAL && typeof(nullvalue) == TYPE_INT)):
-		Log.printerr("Warning: value mismatch when loading an options file. Key '"+key+"' has type "+Util.variantTypeToString(typeof(data[key]))+" and default value has type "+Util.variantTypeToString(typeof(nullvalue))+". Is that an error? "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Warning: value mismatch when loading an options file. Key '"+key+"' has type "+Util.variantTypeToString(typeof(data[key]))+" and default value has type "+Util.variantTypeToString(typeof(nullvalue))+". Is that an error? "+Util.getStackFunction())
 		
 	if(data[key] == null && nullvalue != null):
-		Log.printerr("Warning: loaded value is null while the default value isn't. Is that correct? "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Warning: loaded value is null while the default value isn't. Is that correct? "+Util.getStackFunction())
 		
 	return data[key]
 

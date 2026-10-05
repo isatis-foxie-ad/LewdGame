@@ -26,7 +26,8 @@ const DEFAULT_SLOT_IS_ESSENTIAL:Dictionary = {
 
 static func getAll() -> Array:
 	if(GlobalRegistry.cachedBodypartSlotsList.empty()):
-		Log.printerr("BodypartSlot.getAll() got called before the cached list got populated with values! "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("BodypartSlot.getAll() got called before the cached list got populated with values! "+Util.getStackFunction())
 		return DEFAULT_SLOTS # Fallback
 
 	return GlobalRegistry.cachedBodypartSlotsList

@@ -4,7 +4,8 @@ func _init():
 	id = StageScene.Nothing
 
 func playAnimation(_animID, _args = {}):
-	print("PLAYING NOTHING")
+	if OPTIONS.isMainLoggingEnabled():
+		print("PLAYING NOTHING")
 
 func getVarNpcs():
 	return []

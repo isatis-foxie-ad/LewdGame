@@ -62,7 +62,8 @@ func onExport2ButtonClicked(_savePath:String):
 	if(theText.empty()):
 		return
 	var theBytes := theText.to_utf8().compress(File.COMPRESSION_DEFLATE)
-	print("BYTES AMOUNT: "+str(theBytes.size()))
+	if OPTIONS.isMainLoggingEnabled():
+		print("BYTES AMOUNT: "+str(theBytes.size()))
 	#export_save_as_text_text_edit.text = Marshalls.raw_to_base64(theBytes)
 	export_text_panel_container.visible = true
 
@@ -72,7 +73,8 @@ func onExportButtonClicked(savePath: String):
 
 func onExportButtonClickedActually():
 	var savePath:String = selectedFilePathForExport
-	print("EXPORT: "+savePath)
+	if OPTIONS.isMainLoggingEnabled():
+		print("EXPORT: "+savePath)
 	if(OS.get_name() == "HTML5"):
 		var save_game = File.new()
 		if not save_game.file_exists(savePath):
@@ -222,7 +224,8 @@ func doActuallyImportFromFile():
 		$ImportSaveDialog.popup_centered()
 
 func _on_ImportSaveDialog_file_selected(path: String):
-	print(path.get_file().get_basename())
+	if OPTIONS.isMainLoggingEnabled():
+		print(path.get_file().get_basename())
 	var d = Directory.new()
 	d.copy(path, "user://saves/"+path.get_file().get_basename()+".save")
 	updateSaves()

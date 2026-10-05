@@ -340,11 +340,14 @@ func onError(msg):
 func logDebug(_text:String):
 	if(!DEBUG_LOVENSE):
 		return
-	Log.print("[LovenseConnect] " + str(_text))
+
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("[LovenseConnect] " + str(_text))
 
 
 func logError(_text:String):
-	Log.printerr("[LovenseConnect] " + str(_text))
+	if OPTIONS.isMainLoggingEnabled():
+		Log.printerr("[LovenseConnect] " + str(_text))
 	lastErrors.append(_text)
 
 const FEATURE_TO_COMMAND:Dictionary = {

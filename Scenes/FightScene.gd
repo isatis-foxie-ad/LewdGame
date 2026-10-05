@@ -763,7 +763,8 @@ func aiTurn():
 		var attack: Attack = GlobalRegistry.getAttack(attackID)
 
 		if(attack == null):
-			Log.printerr("Bad attack "+str(attackID))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Bad attack "+str(attackID))
 			attackID = "blunderAttack"
 			attack = GlobalRegistry.getAttack(attackID)
 			

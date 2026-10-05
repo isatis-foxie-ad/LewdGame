@@ -10,7 +10,8 @@ func _init():
 #	animationTree.active = true
 	
 func playAnimation(animID, _args = {}):
-	print("Playing cryopod: "+str(animID))
+	if OPTIONS.isMainLoggingEnabled():
+		print("Playing cryopod: "+str(animID))
 	if(_args.has("pc")):
 		doll.prepareCharacter(_args["pc"])
 	else:
@@ -38,7 +39,8 @@ func playAnimation(animID, _args = {}):
 	if(animID == "idle"):
 		animationPlayer.play("Idle")
 	else:
-		Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 
 func getSupportedStates():
 	return ["idle"]

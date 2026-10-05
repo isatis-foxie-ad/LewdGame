@@ -49,7 +49,8 @@ func updateBodypartList():
 func _on_SlotList_item_selected(index):
 	var selectedSlot = BodypartSlot.getAll()[index]
 	currentSlot = selectedSlot
-	print(selectedSlot)
+	if OPTIONS.isMainLoggingEnabled():
+		print(selectedSlot)
 	
 	updateBodypartList()
 

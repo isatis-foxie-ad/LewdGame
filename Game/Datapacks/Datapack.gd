@@ -300,7 +300,8 @@ func loadFromResource(datapack:DatapackResource):
 			return true
 		return false
 	else:
-		Log.printerr("Tried to load a datapack with a bad version: "+str(version))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Tried to load a datapack with a bad version: "+str(version))
 		return false
 
 func saveToDisk() -> bool:

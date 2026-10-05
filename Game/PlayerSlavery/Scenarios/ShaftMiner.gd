@@ -314,7 +314,8 @@ class Dude:
 				path.pop_front()
 		
 		if(path.empty()):
-			Log.printerr("Dude path is empty, something is wrong!")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Dude path is empty, something is wrong!")
 			return false
 		
 		var nextLoc:String = path.pop_front()

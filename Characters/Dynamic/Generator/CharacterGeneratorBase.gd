@@ -58,6 +58,7 @@ func pickSpecies(character:DynamicCharacter, _args = {}):
 	var possible = []
 	for speciesID in allSpecies:
 		var specie = allSpecies[speciesID]
+		# print(!specie.canBeUsedForNPCType(speciesType))
 		if(!specie.canBeUsedForNPCType(speciesType)):
 			continue
 		
@@ -78,6 +79,8 @@ func createBodyparts(character:DynamicCharacter, _args = {}):
 	var theSpecies:Array = character.npcSpecies
 	for bodypartSlot in BodypartSlot.getAll():
 		var possible := Bodypart.findPossibleBodypartIDs(bodypartSlot, character, theSpecies, character.npcGeneratedGender)
+		if OPTIONS.isMainLoggingEnabled():
+			print(possible)
 		var fullWeight:float = 0.0
 		for pairs in possible:
 			fullWeight += max(0.0, pairs[1])
@@ -118,7 +121,8 @@ func pickArchetypes(character:DynamicCharacter, _args = {}):
 	for _i in range(amount):
 		picked.append(RNG.pick(possible))
 	character.npcArchetypes = picked
-	print(picked)
+	if OPTIONS.isMainLoggingEnabled():
+		print(picked)
 
 func pickFetishes(character:DynamicCharacter, _args = {}):
 	var fetishHolder = character.getFetishHolder()

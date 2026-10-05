@@ -11,7 +11,8 @@ func setTexturePath(newPath):
 	var image = Image.new()
 	var err = image.load(texturePath)
 	if err != OK:
-		Log.error("Couldn't load skin from "+str(newPath)+"!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("Couldn't load skin from "+str(newPath)+"!")
 		customTexture.create(32, 32)
 		return
 	

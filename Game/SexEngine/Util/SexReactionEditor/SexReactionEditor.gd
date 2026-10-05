@@ -36,7 +36,8 @@ func saveToFile():
 func loadFromFile():
 	var file := File.new()
 	if(file.open(SavePath, File.READ) != OK):
-		Log.printerr("Something bad happened")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Something bad happened")
 		return
 	var content:String = file.get_as_text()
 	data = str2var(content)

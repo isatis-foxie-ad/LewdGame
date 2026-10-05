@@ -92,7 +92,8 @@ func test_do(_id:String, _args:Dictionary, _context:Dictionary):
 
 	if(_id == "fight"):
 		var fightResult = getFightResult(_args)
-		print(fightResult)
+		if OPTIONS.isMainLoggingEnabled():
+			print(fightResult)
 		#startFight("target", "started", _context)
 		setState("", "started")
 		

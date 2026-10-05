@@ -72,7 +72,8 @@ func getCompatibleSpecies():
 func getCompatibleSpeciesFinal() -> Array:
 	var theSpecies = getCompatibleSpecies()
 	if(!(theSpecies is Array)):
-		Log.printerr(id+".getCompatibleSpecies() RETURNS BAD VALUE ("+str(theSpecies)+"), SUPPOSED TO BE AN ARRAY")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr(id+".getCompatibleSpecies() RETURNS BAD VALUE ("+str(theSpecies)+"), SUPPOSED TO BE AN ARRAY")
 		return []
 	return theSpecies
 

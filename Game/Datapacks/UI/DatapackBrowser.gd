@@ -217,7 +217,8 @@ func _on_DownloadModButton_pressed():
 	if error != OK:
 		showAlert("[DatapackBrowser] An error occurred in the HTTP request.")
 	else:
-		Log.print("Downloading datapack: "+str(pickedModEntry.download))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("Downloading datapack: "+str(pickedModEntry.download))
 
 
 func _on_HTTPRequestMod_request_completed(result, _response_code, _headers, _body):
@@ -227,7 +228,9 @@ func _on_HTTPRequestMod_request_completed(result, _response_code, _headers, _bod
 		showAlert("[DatapackBrowser] Couldn't download datapack. Sorry")
 		return
 	
-	Log.print("Datapack downloaded")
+
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("Datapack downloaded")
 
 func showMessage(text):
 	messageDialog.dialog_text = text
@@ -297,25 +300,29 @@ func startDownloadingPreview(index, url:String):
 		isDownloadingPNG = true
 	var error = http_request_preview.request(url)
 	if error != OK:
-		Log.printerr("Datapack browser failed to start loading a preview image")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Datapack browser failed to start loading a preview image")
 		return
 
 func _on_HTTPRequestPreview_request_completed(result, _response_code, _headers, body):
 	isDownloadingPreview = false
 	if result != HTTPRequest.RESULT_SUCCESS:
-		Log.printerr("Datapack browser failed to download a preview image")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Datapack browser failed to download a preview image")
 		return
 	
 	var image = Image.new()
 	if(isDownloadingPNG):
 		var error = image.load_png_from_buffer(body)
 		if error != OK:
-			Log.printerr("Datapack browser failed to load up a preview image (not a png?)")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Datapack browser failed to load up a preview image (not a png?)")
 			return
 	else:
 		var error = image.load_jpg_from_buffer(body)
 		if error != OK:
-			Log.printerr("Datapack browser failed to load up a preview image (not a jpg?)")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Datapack browser failed to load up a preview image (not a jpg?)")
 			return
 	
 	var texture := ImageTexture.new()

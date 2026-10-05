@@ -17,7 +17,8 @@ func _on_Button_pressed():
 func _on_Button2_pressed():
 	var newTestRes:TestResource = ResourceLoader.load("user://MYTEST.tres")
 
-	print(newTestRes.someName)
+	if OPTIONS.isMainLoggingEnabled():
+		print(newTestRes.someName)
 	var imText = ImageTexture.new()
 	imText.create_from_image(newTestRes.data)
 	$TextureRect.texture = imText

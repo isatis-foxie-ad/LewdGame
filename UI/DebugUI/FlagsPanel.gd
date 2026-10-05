@@ -143,14 +143,16 @@ func updateFlags():
 
 func onDecisionChange(_missionID:String, _decisionID:String, _value):
 	GM.main.MS.setDecisionSpecific(_missionID, _decisionID, _value)
-	Log.print("Setting mission decision "+str(_decisionID)+" in mission "+str(_missionID)+" to "+str(_value))
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("Setting mission decision "+str(_decisionID)+" in mission "+str(_missionID)+" to "+str(_value))
 
 func onFlagMissionCompletedChanged(_missionID:String, _completed:bool):
 	GM.main.MS.setMissionCompleteStatus(_missionID, _completed)
-	if(_completed):
-		Log.print("Marking mission "+str(_missionID)+" as completed")
-	else:
-		Log.print("Marking mission "+str(_missionID)+" as not completed")
+	if OPTIONS.isMainLoggingEnabled():
+		if(_completed):
+			Log.print("Marking mission "+str(_missionID)+" as completed")
+		else:
+			Log.print("Marking mission "+str(_missionID)+" as not completed")
 	
 func addDivider(text):
 	var flagPanelDividerObject = flagPanelDividerScene.instance()
@@ -174,16 +176,20 @@ func _on_FlagEditWindow_clearFlag(flagKind, moduleID, flagID):
 	if(flagKind == FlagType.Kind.GameFlag):
 		if(moduleID == null || moduleID == ""):
 			GM.main.clearFlag(flagID)
-			Log.print("Cleared flag "+str(flagID))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.print("Cleared flag "+str(flagID))
 		else:
 			GM.main.clearModuleFlag(moduleID, flagID)
-			Log.print("Cleared flag "+str(flagID)+" in module "+str(moduleID))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.print("Cleared flag "+str(flagID)+" in module "+str(moduleID))
 	elif(flagKind == FlagType.Kind.DatapackFlag):
 		GM.main.clearDatapackFlag(moduleID, flagID)
-		Log.print("Cleared flag "+str(flagID)+" in datapack "+str(moduleID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("Cleared flag "+str(flagID)+" in datapack "+str(moduleID))
 	elif(flagKind == FlagType.Kind.MissionFlag):
 		GM.main.MS.setSpecificFlag(moduleID, flagID, null)
-		Log.print("Cleared flag "+str(flagID)+" in mission "+str(moduleID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("Cleared flag "+str(flagID)+" in mission "+str(moduleID))
 
 	updateFlags()
 
@@ -191,16 +197,20 @@ func _on_FlagEditWindow_setFlagValue(flagKind, moduleID, flagID, value):
 	if(flagKind == FlagType.Kind.GameFlag):
 		if(moduleID == null || moduleID == ""):
 			GM.main.setFlag(flagID, value)
-			Log.print("Setting flag "+str(flagID)+" to "+str(value))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.print("Setting flag "+str(flagID)+" to "+str(value))
 		else:
 			GM.main.setModuleFlag(moduleID, flagID, value)
-			Log.print("Setting flag "+str(flagID)+" in module "+str(moduleID)+" to "+str(value))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.print("Setting flag "+str(flagID)+" in module "+str(moduleID)+" to "+str(value))
 	elif(flagKind == FlagType.Kind.DatapackFlag):
 		GM.main.setDatapackFlag(moduleID, flagID, value)
-		Log.print("Setting datapack flag "+str(flagID)+" in datapack "+str(moduleID)+" to "+str(value))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("Setting datapack flag "+str(flagID)+" in datapack "+str(moduleID)+" to "+str(value))
 	elif(flagKind == FlagType.Kind.MissionFlag):
 		GM.main.MS.setSpecificFlag(moduleID, flagID, value)
-		Log.print("Setting mission flag "+str(flagID)+" in mission "+str(moduleID)+" to "+str(value))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("Setting mission flag "+str(flagID)+" in mission "+str(moduleID)+" to "+str(value))
 	
 	updateFlags()
 

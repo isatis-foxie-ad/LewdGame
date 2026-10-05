@@ -135,7 +135,8 @@ func doBestAction():
 				maxScore = theScore
 	
 	if(actionToScore.empty()):
-		Log.printerr("Something is wrong, we can't pick an auction action to do")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Something is wrong, we can't pick an auction action to do")
 		return
 	
 	var filterScore:float = maxScore * 0.7

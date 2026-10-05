@@ -42,7 +42,8 @@ func _on_EnableTranslationBox_toggled(button_pressed):
 
 func _on_LanguageList_item_selected(index):
 	var allLangs = TranslationLanguage.getAll().keys()
-	print(allLangs[index])
+	if OPTIONS.isMainLoggingEnabled():
+		print(allLangs[index])
 	AutoTranslation.setTargetLanguage(allLangs[index])
 
 func _on_EnableManualTranslateButton_toggled(button_pressed):

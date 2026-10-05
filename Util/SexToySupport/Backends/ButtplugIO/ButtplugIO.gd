@@ -305,10 +305,13 @@ func onError(msg):
 func logDebug(_text:String):
 	if(!DEBUG_BUTTPLUGIO):
 		return
-	Log.print("[Buttplug.IO] "+str(_text))
+
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("[Buttplug.IO] "+str(_text))
 
 func logError(_text:String):
-	Log.printerr("[Buttplug.IO] "+str(_text))
+	if OPTIONS.isMainLoggingEnabled():
+		Log.printerr("[Buttplug.IO] "+str(_text))
 	lastErrors.append(_text)
 
 

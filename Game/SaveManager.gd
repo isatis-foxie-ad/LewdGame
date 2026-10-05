@@ -33,10 +33,12 @@ func saveData():
 
 func loadData(data: Dictionary):
 	if(!data.has("savefile_version")):
-		Log.printerr("Error: Save file doesn't have a version in it. It might not be a savefile")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Error: Save file doesn't have a version in it. It might not be a savefile")
 		return
 	if(data["savefile_version"] > currentSavefileVersion):
-		Log.printerr("Error: This savefile is not supported, sorry. Current supported version: "+str(currentSavefileVersion)+". Savefile version: "+data["savefile_version"])
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Error: This savefile is not supported, sorry. Current supported version: "+str(currentSavefileVersion)+". Savefile version: "+data["savefile_version"])
 		return
 		
 	loadedSavefileVersion = data["savefile_version"]
@@ -70,7 +72,8 @@ func canSave():
 	
 func saveGame(_path):
 	if(!canSave()):
-		Log.printerr("Can't save because one of the scenes doesn't support saving")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Can't save because one of the scenes doesn't support saving")
 		return
 	
 	var saveData = saveData()
@@ -93,15 +96,18 @@ func loadSaveInfoCacheFromFile():
 	save_game.open(saveInfoCachePath, File.READ)
 	var jsonResult = JSON.parse(save_game.get_as_text())
 	if(jsonResult.error != OK):
-		Log.printerr("Save info cache is not a valid json file")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Save info cache is not a valid json file")
 		return
 	
 	var saveData:Dictionary = jsonResult.result
 	if(!saveData.has("version") || !saveData.has("saves")):
-		Log.printerr("Save info cache is not valid")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Save info cache is not valid")
 		return
 	if(saveData["version"] != 1):
-		Log.printerr("Unsupported save info cache version")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Unsupported save info cache version")
 		return
 	saveInfoCache = saveData["saves"]
 
@@ -146,8 +152,9 @@ func saveGameRelative(_name):
 func loadGame(_path):
 	var save_game = File.new()
 	if not save_game.file_exists(_path):
-		Log.error("Save file is not found in "+str(_path))
-		#assert(false, "Save file is not found in "+str(_path))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("Save file is not found in "+str(_path))
+			#assert(false, "Save file is not found in "+str(_path))
 		return # Error! We don't have a save to load.
 	
 	save_game.open(_path, File.READ)
@@ -194,18 +201,22 @@ func isUpdatingFromSaveVersion(oldSaveVersion: int):
 
 func loadVar(data, key, nullvalue = null):
 	if(!(data is Dictionary)):
-		Log.printerr("Warning: Loaded key "+key+" is not a dictionary. Using "+str(nullvalue)+" as default value. "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Warning: Loaded key "+key+" is not a dictionary. Using "+str(nullvalue)+" as default value. "+Util.getStackFunction())
 		return nullvalue
 	
 	if(!data.has(key)):
-		Log.warning("Warning: Save doesn't have key "+key+". Using "+str(nullvalue)+" as default value. "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.warning("Warning: Save doesn't have key "+key+". Using "+str(nullvalue)+" as default value. "+Util.getStackFunction())
 		return nullvalue
 		
 	if(nullvalue != null && typeof(data[key]) != typeof(nullvalue) && !(typeof(data[key]) == TYPE_REAL && typeof(nullvalue) == TYPE_INT) && !(typeof(data[key]) == TYPE_INT && typeof(nullvalue) == TYPE_REAL)):
-		Log.printerr("Warning: value mismatch when loading a save. Key '"+key+"' has type "+Util.variantTypeToString(typeof(data[key]))+" and default value has type "+Util.variantTypeToString(typeof(nullvalue))+". Is that an error? "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Warning: value mismatch when loading a save. Key '"+key+"' has type "+Util.variantTypeToString(typeof(data[key]))+" and default value has type "+Util.variantTypeToString(typeof(nullvalue))+". Is that an error? "+Util.getStackFunction())
 		
 	if(data[key] == null && nullvalue != null):
-		Log.printerr("Warning: loaded value is null while the default value isn't. Is that correct? "+Util.getStackFunction())
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Warning: loaded value is null while the default value isn't. Is that correct? "+Util.getStackFunction())
 		
 	return data[key]
 
@@ -325,7 +336,8 @@ func loadGameInformationFromSave(_path):
 	var theInfo = loadGameInformationFromSaveRaw(_path)
 	if(theInfo != null):
 		saveInfoCache[_path] = theInfo
-		#Log.print("CREATED SAVE INFO CACHE FOR: "+str(_path))
+		if OPTIONS.isMainLoggingEnabled():
+			#Log.print("CREATED SAVE INFO CACHE FOR: "+str(_path))
 		triggerSaveCacheSave()
 	return theInfo
 
@@ -343,10 +355,12 @@ func loadGameInformationFromSaveRaw(_path):
 	var data = jsonResult.result
 	
 	if(!data.has("savefile_version")):
-		Log.printerr("Error: Save file doesn't have a version in it. It might not be a savefile")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Error: Save file doesn't have a version in it. It might not be a savefile")
 		return null
 	if(data["savefile_version"] > currentSavefileVersion):
-		Log.printerr("Error: This savefile is not supported, sorry. Current supported version: "+str(currentSavefileVersion)+". Savefile version: "+data["savefile_version"])
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Error: This savefile is not supported, sorry. Current supported version: "+str(currentSavefileVersion)+". Savefile version: "+data["savefile_version"])
 		return	null
 	
 	var playerName = data["player"]["gamename"]

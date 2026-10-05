@@ -146,7 +146,8 @@ func loadData(data):
 			continue
 		var bodypart = getBodypart(slot)
 		if(bodypartid != bodypart.id):
-			Log.warning("Bodypart changed for "+getName()+"'s "+str(slot)+", ignoring data (was "+bodypartid+", became "+bodypart.id+")")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.warning("Bodypart changed for "+getName()+"'s "+str(slot)+", ignoring data (was "+bodypartid+", became "+bodypart.id+")")
 			continue
 		bodypart.loadDataNPC(bodypartData)
 	
@@ -213,7 +214,9 @@ func paintBodyparts():
 	if(npcSkinData != null):
 		for bodypartSlot in npcSkinData:
 			if(!hasBodypart(bodypartSlot)):
-				#Log.error(getID()+" doesn't have "+str(bodypartSlot)+" slot but we're trying to paint it anyway inside paintBodyparts()")
+				if OPTIONS.isMainLoggingEnabled():
+					#Log.error(getID()+" doesn't have "+str(bodypartSlot)+" slot but we're trying to paint it anyway inside paintBodyparts()")
+					pass
 				continue
 			var bodypart = getBodypart(bodypartSlot)
 			var bodypartSkinData = npcSkinData[bodypartSlot]
@@ -562,12 +565,14 @@ func processUntilTime(theday:int, theseconds:int):
 		#secondsDiff = 24*60*60*dayDiff - lastUpdatedSecond + theseconds
 	
 	if(secondsDiff < 0):
-		Log.error("processUntilTime() trying to process "+str(getID())+" for a negative amount of seconds ("+str(secondsDiff)+")")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("processUntilTime() trying to process "+str(getID())+" for a negative amount of seconds ("+str(secondsDiff)+")")
 		return
 	
 	var oldHours:int = int(float(lastUpdatedSecond) / 60 / 60) + lastUpdatedDay*24
 	
-	print("PROCESSED "+str(getID())+" FOR "+str(secondsDiff)+" SECONDS")
+	if OPTIONS.isMainLoggingEnabled():
+		print("PROCESSED "+str(getID())+" FOR "+str(secondsDiff)+" SECONDS")
 	var oneWeekSeconds:int = 7*24*60*60
 	var oneDaySeconds:int = 24*60*60
 	var oneHourSeconds:int = 60*60
@@ -593,7 +598,8 @@ func processUntilTime(theday:int, theseconds:int):
 	var hoursPassed:int = newHours - oldHours
 	
 	if(hoursPassed > 0):
-		print("and also for "+str(hoursPassed)+" hours")
+		if OPTIONS.isMainLoggingEnabled():
+			print("and also for "+str(hoursPassed)+" hours")
 		hoursPassed(hoursPassed)
 	
 	lastUpdatedDay = theday

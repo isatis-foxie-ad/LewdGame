@@ -45,7 +45,8 @@ func setFlipWeights(_new_value):
 				newSplitted.append(subWord)
 		
 		var newBoneString = Util.join(newSplitted, "/")
-		print("Old:"+oldString +" new:"+newBoneString)
+		if OPTIONS.isMainLoggingEnabled():
+			print("Old:"+oldString +" new:"+newBoneString)
 		bones[i] = newBoneString
 				
 func SetFlipLegPos(_newvalue):

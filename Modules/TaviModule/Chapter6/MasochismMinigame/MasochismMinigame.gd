@@ -144,7 +144,10 @@ func calculateTargetPain():
 	
 	if(!testSequence(sequence)):
 		return 0
-	print(sequence)
+
+		
+	if OPTIONS.isMainLoggingEnabled():
+		print(sequence)
 	
 	return pain
 

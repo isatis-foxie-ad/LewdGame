@@ -411,7 +411,8 @@ func checkOrigParts():
 	for theSlot in toRemove:
 		originalParts.erase(theSlot)
 		affectedParts.erase(theSlot)
-		Log.printerr("(TFHolder) Fixing original essential part that somehow became null. Char="+getChar().getID()+" Slot="+theSlot)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("(TFHolder) Fixing original essential part that somehow became null. Char="+getChar().getID()+" Slot="+theSlot)
 	
 func saveData() -> Dictionary:
 	var effectsData:Array = []

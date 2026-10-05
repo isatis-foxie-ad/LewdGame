@@ -36,7 +36,8 @@ func playAnimation(animID, _args = {}):
 	if(animID == "idle"):
 		state_machine.travel("Slutwall_idle-loop")
 	else:
-		Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Action "+str(animID)+" is not found for stage "+str(id))
 
 func getSupportedStates():
 	return ["idle"]

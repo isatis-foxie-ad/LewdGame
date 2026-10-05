@@ -284,7 +284,8 @@ func beforeFightStarted():
 	pass
 
 func afterFightEnded():
-	print(getName()+" my fight has ended")
+	if OPTIONS.isMainLoggingEnabled():
+		print(getName()+" my fight has ended")
 	
 	timedBuffsTurns.clear()
 	
@@ -940,7 +941,8 @@ func resetSlots():
 
 func giveBodypart(bodypart: Bodypart, emitSignal = true):
 	if(bodypart == null):
-		Log.printerr("Trying to give a null bodypart to "+str(self))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to give a null bodypart to "+str(self))
 		return
 	
 	var slot = bodypart.getSlot()
@@ -959,7 +961,8 @@ func giveBodypart(bodypart: Bodypart, emitSignal = true):
 
 func giveBodypartUnlessSame(bodypart: Bodypart):
 	if(bodypart == null):
-		Log.printerr("Trying to give a null bodypart to "+str(self))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to give a null bodypart to "+str(self))
 		return
 	var slot = bodypart.getSlot()
 	if(bodyparts.has(slot) && bodyparts[slot] != null):
@@ -976,7 +979,8 @@ func hasBodypart(slot):
 	
 func getBodypart(slot):
 	if(!bodyparts.has(slot)):
-		Log.printerr("Trying to get bodypart from slot "+str(slot)+" when it doesn't exist.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to get bodypart from slot "+str(slot)+" when it doesn't exist.")
 		return null
 	return bodyparts[slot]
 
@@ -3033,9 +3037,11 @@ func sendSexEvent(event):
 
 func onSexEvent(_event : SexEvent):
 	if(_event == null):
-		Log.error("GOT A NULL SEX EVENT")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.error("GOT A NULL SEX EVENT")
 		return
-	print(getID()+" GOT SEX EVENT "+str(_event.type)+" SOURCE:"+str(_event.sourceCharID)+" TARGET:"+str(_event.targetCharID)+" "+str(_event.data))
+	if OPTIONS.isMainLoggingEnabled():
+		print(getID()+" GOT SEX EVENT "+str(_event.type)+" SOURCE:"+str(_event.sourceCharID)+" TARGET:"+str(_event.targetCharID)+" "+str(_event.data))
 
 	getSkillsHolder().onSexEvent(_event)
 	for effectID in statusEffects.keys():

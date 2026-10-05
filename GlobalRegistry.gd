@@ -386,13 +386,18 @@ func getRawModList() -> Array:
 			else:
 				if(file_name.get_extension() in ["pck", "zip"]):
 					var full_path = modsFolder.plus_file(file_name)
-					#print("Registered mod: " + full_path)
+					
+					if OPTIONS.isMainLoggingEnabled():
+						#print("Registered mod: " + full_path)
+						pass
 					#var _ok = ProjectSettings.load_resource_pack(full_path)
 					#if(_ok):
 					result.append(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+modsFolder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+modsFolder)
+			pass
 	return result
 
 func checkModSupport():
@@ -423,7 +428,9 @@ func loadModOrder(theModOrder:Array):
 		if(_ok):
 			loadedMods.append(modEntry["name"])
 	if(!loadedMods.empty()):
-		Log.print("Loaded mods ("+str(loadedMods.size())+"): "+str(loadedMods))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("Loaded mods ("+str(loadedMods.size())+"): "+str(loadedMods))
+			pass
 
 const CACHE_SCENE = "scene"
 const CACHE_CHAR = "char"
@@ -537,18 +544,21 @@ func validateDonationData(donationData):
 
 func onDonationDataRequest(result, _response_code, _headers, body):
 	if result != HTTPRequest.RESULT_SUCCESS:
-		Log.printerr("[onDonationDataRequest] Couldn't get data from github")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[onDonationDataRequest] Couldn't get data from github")
 		return
 	
 	var jsonResult = JSON.parse(body.get_string_from_utf8())
 	if(jsonResult.error != OK):
-		Log.printerr("[onDonationDataRequest] Couldn't parse json data from github.")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[onDonationDataRequest] Couldn't parse json data from github.")
 		return
 	
 	var donationData = jsonResult.result
 
 	if(!validateDonationData(donationData)):
-		Log.printerr("[onDonationDataRequest] Bad data from github")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("[onDonationDataRequest] Bad data from github")
 		return
 	
 	cachedDonationData = donationData
@@ -622,7 +632,8 @@ func registerEverything():
 		registerBodypartFolder("res://Player/Bodyparts/Vagina/")
 		var end2 = OS.get_ticks_usec()
 		var worker_time2 = (end2-start2)/1000000.0
-		Log.print("BODYPARTS initialized in: %s seconds" % [worker_time2])
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("BODYPARTS initialized in: %s seconds" % [worker_time2])
 	
 	emit_signal("loadingUpdate", 4.0/totalStages, "Inventory")
 	yield(get_tree(), "idle_frame")
@@ -684,7 +695,8 @@ func registerEverything():
 		
 		var end2 = OS.get_ticks_usec()
 		var worker_time2 = (end2-start2)/1000000.0
-		Log.print("SCENES initialized in: %s seconds" % [worker_time2])
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("SCENES initialized in: %s seconds" % [worker_time2])
 	
 	registerFluidsFolder("res://Player/Fluids/Fluids/")
 	
@@ -763,7 +775,8 @@ func registerEverything():
 		registerStageSceneFolder("res://Player/StageScene3D/Scenes/")
 		var end2 = OS.get_ticks_usec()
 		var worker_time2 = (end2-start2)/1000000.0
-		Log.print("STAGE SCENES initialized in: %s seconds" % [worker_time2])
+		if OPTIONS.isMainLoggingEnabled():
+			Log.print("STAGE SCENES initialized in: %s seconds" % [worker_time2])
 		
 	registerMapFloorFolder("res://Game/World/Floors/")
 	
@@ -829,7 +842,8 @@ func registerEverything():
 	
 	var end = OS.get_ticks_usec()
 	var worker_time = (end-start)/1000000.0
-	Log.print("GlobalRegistry fully initialized in: %s seconds" % [worker_time])
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("GlobalRegistry fully initialized in: %s seconds" % [worker_time])
 	isInitialized = true
 	deleteLoadLockFile()
 	emit_signal("loadingFinished")
@@ -885,7 +899,8 @@ func registerScene(path: String, creator = null):
 	
 	var scene = load(path)
 	if(!scene):
-		Log.printerr("ERROR: couldn't load scene from path "+path)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: couldn't load scene from path "+path)
 		return
 	var sceneObject = scene.new()
 	scenes[sceneObject.sceneID] = scene
@@ -929,7 +944,8 @@ func createScene(id: String):
 			return newscene
 	
 	if(!scenes.has(id) && !temporaryScenes.has(id) && !hasCachedID(CACHE_SCENE, id)):
-		Log.printerr("ERROR: scene with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: scene with the id "+id+" wasn't found")
 		return null
 	var scene
 	if(temporaryScenes.has(id)):
@@ -939,7 +955,8 @@ func createScene(id: String):
 			scenes[id] = loadCached(CACHE_SCENE, id)
 			if(scenes[id] == null): # We have a cache entry but the scene doesn't actually exist
 				removeCacheEntryByID(CACHE_SCENE, id)
-				Log.printerr("ERROR: scene with the id "+id+" wasn't found (cache error)")
+				if OPTIONS.isMainLoggingEnabled():
+					Log.printerr("ERROR: scene with the id "+id+" wasn't found (cache error)")
 				return null
 		scene = scenes[id].new()
 	scene.name = scene.sceneID
@@ -953,15 +970,20 @@ func registerSceneFolder(folder: String):
 		while file_name != "":
 			if dir.current_is_dir():
 				pass
-				#print("Found directory: " + file_name)
+				if OPTIONS.isMainLoggingEnabled():
+					pass
+					#print("Found directory: " + file_name)
 			else:
 				if(file_name.get_extension() == "gd"):
 					var full_path = folder.plus_file(file_name)
-					#print("Registered scene: " + full_path)
+					if OPTIONS.isMainLoggingEnabled():
+						pass
+						#print("Registered scene: " + full_path)
 					registerScene(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 func registerSceneFolderDeep(folder: String):
 	var scripts = getScriptsInFoldersRecursive(folder)
@@ -978,13 +1000,15 @@ func registerBodypart(path: String, _authorOverride:String = ""):
 
 func createBodypart(id: String):
 	if(!bodyparts.has(id)):
-		Log.printerr("ERROR: bodypart with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: bodypart with the id "+id+" wasn't found")
 		return null
 	return bodyparts[id].duplicate()
 
 func getBodypartRef(id: String):
 	if(!bodyparts.has(id)):
-		Log.printerr("ERROR: bodypart with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: bodypart with the id "+id+" wasn't found")
 		return null
 	return bodyparts[id]
 
@@ -1017,15 +1041,20 @@ func registerBodypartFolder(folder: String):
 		while file_name != "":
 			if dir.current_is_dir():
 				pass
-				#print("Found directory: " + file_name)
+				if OPTIONS.isMainLoggingEnabled():
+					pass
+					#print("Found directory: " + file_name)
 			else:
 				if(file_name.get_extension() == "gd"):
 					var full_path = folder.plus_file(file_name)
-					#print("Registered bodypart: " + full_path)
+					if OPTIONS.isMainLoggingEnabled():
+						pass
+						#print("Registered bodypart: " + full_path)
 					registerBodypart(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 func registerCharacter(path: String):
 	if(hasCachedPath(CACHE_CHAR, path)):
@@ -1046,15 +1075,20 @@ func registerCharacterFolder(folder: String):
 		while file_name != "":
 			if dir.current_is_dir():
 				pass
-				#print("Found directory: " + file_name)
+				if OPTIONS.isMainLoggingEnabled():
+					pass
+					#print("Found directory: " + file_name)
 			else:
 				if(file_name.get_extension() == "gd"):
 					var full_path = folder.plus_file(file_name)
-					#print("Registered character: " + full_path)
+					if OPTIONS.isMainLoggingEnabled():
+						pass
+						#print("Registered character: " + full_path)
 					registerCharacter(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 func characterExists(id:String):
 	if(id == "pc"):
@@ -1076,7 +1110,8 @@ func getCharacter(id: String):
 			return mainCharacter
 	
 	#if(!characters.has(id)):
-	Log.printerr("ERROR: character with the id "+id+" wasn't found ")
+	if OPTIONS.isMainLoggingEnabled():
+		Log.printerr("ERROR: character with the id "+id+" wasn't found ")
 	return null
 	#return characters[id]
 
@@ -1111,12 +1146,14 @@ func createCharacter(charID:String):
 
 func createStaticCharacter(charID:String):
 	if(!characterClasses.has(charID)):
-		Log.printerr("ERROR: character class with the id "+charID+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: character class with the id "+charID+" wasn't found")
 		return null
 	if(characterClasses[charID] == null && hasCachedID(CACHE_CHAR, charID)):
 		characterClasses[charID] = loadCached(CACHE_CHAR, charID)
 		if(!characterClasses[charID]):
-			Log.printerr("ERROR: character class with the id "+charID+" wasn't found (cache error)")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("ERROR: character class with the id "+charID+" wasn't found (cache error)")
 			return null
 	return characterClasses[charID].new()
 
@@ -1137,19 +1174,25 @@ func registerAttackFolder(folder: String, recursive = false):
 				if(recursive):
 					registerAttackFolder(folder.plus_file(file_name)+"/", true)
 				pass
-				#print("Found directory: " + file_name)
+				if OPTIONS.isMainLoggingEnabled():
+					pass
+					#print("Found directory: " + file_name)
 			else:
 				if(file_name.get_extension() == "gd"):
 					var full_path = folder.plus_file(file_name)
-					#print("Registered attack: " + full_path)
+					if OPTIONS.isMainLoggingEnabled():
+						pass
+						#print("Registered attack: " + full_path)
 					registerAttack(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 func getAttack(id: String):
 	if(!attacks.has(id)):
-		Log.printerr("ERROR: attack with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: attack with the id "+id+" wasn't found")
 		return null
 	return attacks[id]
 
@@ -1188,17 +1231,20 @@ func registerStatusEffectFolder(folder: String):
 					registerStatusEffect(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func createStatusEffect(id: String):
 	if(!statusEffects.has(id)):
-		Log.printerr("ERROR: status effect with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: status effect with the id "+id+" wasn't found")
 		return null
 	return statusEffects[id].new()
 
 func getStatusEffectRef(id: String):
 	if(!statusEffectsRefs.has(id)):
-		Log.printerr("ERROR: status effect with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: status effect with the id "+id+" wasn't found")
 		return null
 	return statusEffectsRefs[id]
 
@@ -1253,11 +1299,13 @@ func registerSpeciesFolder(folder: String):
 					registerSpecies(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func getSpecies(id: String):
 	if(!allSpecies.has(id)):
-		Log.printerr("ERROR: species with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: species with the id "+id+" wasn't found")
 		return null
 	return allSpecies[id]
 
@@ -1298,11 +1346,13 @@ func registerItemFolder(folder: String):
 					registerItem(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 func createItem(id: String, generateID = true):
 	if(!items.has(id)):
-		Log.printerr("ERROR: item with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: item with the id "+id+" wasn't found")
 		return null
 	var newItem = items[id].new()
 	if(generateID):
@@ -1314,7 +1364,8 @@ func createItemNoID(id: String):
 
 func getItemRef(id: String):
 	if(!itemsRefs.has(id)):
-		Log.printerr("ERROR: item with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: item with the id "+id+" wasn't found")
 		return null
 	return itemsRefs[id]
 
@@ -1351,7 +1402,8 @@ func getCustomInventorySlots() -> Dictionary:
 func getCustomInventorySlot(slot:String) -> CustomInventorySlot:
 	var slotobj = inventorySlots.get(slot)
 	if !slotobj:
-		Log.printerr("Error: No inventory slot with id '%s' found" % slot)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Error: No inventory slot with id '%s' found" % slot)
 	
 	return slotobj
 
@@ -1375,7 +1427,8 @@ func getCustomBodypartSlots() -> Dictionary:
 func getCustomBodypartSlot(slot:String) -> CustomBodypartSlot:
 	var slotobj = bodypartSlots.get(slot)
 	if !slotobj:
-		Log.printerr("Error: No bodypart slot with id '%s' found" % slot)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Error: No bodypart slot with id '%s' found" % slot)
 	
 	return slotobj
 
@@ -1405,11 +1458,13 @@ func registerBuffFolder(folder: String):
 					registerBuff(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func createBuff(id: String):
 	if(!buffs.has(id)):
-		Log.printerr("ERROR: buff with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: buff with the id "+id+" wasn't found")
 		return null
 	return buffs[id].new()
 
@@ -1438,11 +1493,13 @@ func registerEventFolder(folder: String):
 					registerEvent(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func getEvent(id: String):
 	if(!events.has(id)):
-		Log.printerr("ERROR: event with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: event with the id "+id+" wasn't found")
 		return null
 	return events[id]
 
@@ -1462,7 +1519,8 @@ func registerModules():
 		yield(get_tree(), "idle_frame")
 		
 		moduleObject.register()
-		print("Module "+moduleObject.id+" by "+moduleObject.author+" was registered")
+		if OPTIONS.isMainLoggingEnabled():
+			print("Module "+moduleObject.id+" by "+moduleObject.author+" was registered")
 		loadedModuleCount += 1
 
 func postInitModules():
@@ -1482,7 +1540,8 @@ func getModules():
 
 func getModule(id):
 	if(!modules.has(id)):
-		Log.printerr("ERROR: module with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: module with the id "+id+" wasn't found")
 		return null
 	return modules[id]
 
@@ -1503,15 +1562,18 @@ func registerQuestFolder(folder: String):
 			else:
 				if(file_name.get_extension() == "gd"):
 					var full_path = folder.plus_file(file_name)
-					print("Registered quest: " + full_path)
+					if OPTIONS.isMainLoggingEnabled():
+						print("Registered quest: " + full_path)
 					registerQuest(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func getQuest(id: String):
 	if(!quests.has(id)):
-		Log.printerr("ERROR: quest with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: quest with the id "+id+" wasn't found")
 		return null
 	return quests[id]
 
@@ -1525,7 +1587,8 @@ func registerStat(path: String):
 
 func getStat(id: String):
 	if(!stats.has(id)):
-		Log.printerr("ERROR: quest with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: quest with the id "+id+" wasn't found")
 		return null
 	return stats[id]
 
@@ -1554,11 +1617,13 @@ func registerSkillFolder(folder: String):
 					registerSkill(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func createSkill(id: String):
 	if(!skills.has(id)):
-		Log.printerr("ERROR: skill with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: skill with the id "+id+" wasn't found")
 		return null
 	return skills[id].new()
 
@@ -1593,17 +1658,20 @@ func registerPerkFolder(folder: String):
 					registerPerk(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func createPerk(id: String):
 	if(!perks.has(id)):
-		Log.printerr("ERROR: perk with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: perk with the id "+id+" wasn't found")
 		return null
 	return perks[id].new()
 
 func getPerk(id: String):
 	if(!perksObjects.has(id)):
-		Log.printerr("ERROR: perk with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: perk with the id "+id+" wasn't found")
 		return null
 	return perksObjects[id]
 
@@ -1641,11 +1709,13 @@ func registerLustTopicFolder(folder: String):
 					registerLustTopic(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func getLustTopic(id: String):
 	if(!lustTopics.has(id)):
-		Log.printerr("ERROR: lust topic with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: lust topic with the id "+id+" wasn't found")
 		return null
 	return lustTopics[id]
 
@@ -1685,11 +1755,13 @@ func registerStageSceneFolder(folder: String):
 					registerStageScene(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func createStageScene(id: String):
 	if(!stageScenes.has(id)):
-		Log.printerr("ERROR: stage scene with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: stage scene with the id "+id+" wasn't found")
 		return null
 	
 	if(stageScenes[id] == null && hasCachedID(CACHE_STAGESCENE, id)):
@@ -1702,7 +1774,8 @@ func createStageScene(id: String):
 				stageScenesCachedStates[itemObject.id] = possibleStates
 			return itemObject
 		else:
-			Log.printerr("ERROR: stage scene with the id "+id+" wasn't found (cache error)")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("ERROR: stage scene with the id "+id+" wasn't found (cache error)")
 			return null
 	
 	return stageScenes[id].instance()
@@ -1745,11 +1818,13 @@ func registerLustActionFolder(folder: String):
 					registerLustAction(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func getLustAction(id: String):
 	if(!lustActions.has(id)):
-		Log.printerr("ERROR: lust action with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: lust action with the id "+id+" wasn't found")
 		return null
 	return lustActions[id]
 
@@ -1794,7 +1869,8 @@ func registerLootListFolder(folder: String):
 					registerLootList(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func getLootLists(id: String):
 	if(!lootLists.has(id)):
@@ -1828,11 +1904,13 @@ func preinitModulesHooks(folder: String):
 					var _preInitObject = preInitScript.new()
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 	var end = OS.get_ticks_usec()
 	var worker_time = (end-start)/1000000.0
-	Log.print("MODULES pre-initialion hooks run in: %s seconds" % [worker_time])
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("MODULES pre-initialion hooks run in: %s seconds" % [worker_time])
 
 func preinitModulesFolder(folder: String):
 	var progressBase = 1.0/totalStages
@@ -1863,11 +1941,13 @@ func preinitModulesFolder(folder: String):
 			preinitModule(moduleFile[1])
 			loadedModuleCount += 1
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 	var end = OS.get_ticks_usec()
 	var worker_time = (end-start)/1000000.0
-	Log.print("MODULES pre-initialized in: %s seconds" % [worker_time])
+	if OPTIONS.isMainLoggingEnabled():
+		Log.print("MODULES pre-initialized in: %s seconds" % [worker_time])
 
 func registerFightClubFighter(path: String):
 	var item = load(path)
@@ -1905,7 +1985,8 @@ func sortFightClubFighters():
 
 func registerMapFloor(id: String, path: String):
 	if(mapFloors.has(id)):
-		print(id+" floor is being overwritten!")
+		if OPTIONS.isMainLoggingEnabled():
+			print(id+" floor is being overwritten!")
 	mapFloors[id] = path
 
 func registerMapFloorFolder(folder: String):
@@ -1924,7 +2005,8 @@ func registerMapFloorFolder(folder: String):
 					registerMapFloor(full_path.get_file().get_basename(), full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 func getMapFloors():
 	return mapFloors
@@ -1952,11 +2034,13 @@ func registerImagePackFolder(folder: String):
 				pass
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func getImagePack(id: String):
 	if(!imagePacks.has(id)):
-		Log.printerr("ERROR: image pack with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: image pack with the id "+id+" wasn't found")
 		return null
 	return imagePacks[id]
 
@@ -1988,11 +2072,13 @@ func registerWorldEditFolder(folder: String):
 					registerWorldEdit(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func getWorldEdit(id: String):
 	if(!worldEdits.has(id)):
-		Log.printerr("ERROR: world edit with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: world edit with the id "+id+" wasn't found")
 		return null
 	return worldEdits[id]
 
@@ -2029,20 +2115,23 @@ func registerSexActivitiesFolder(folder: String):
 					registerSexActivity(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 		
 func createSexActivity(id: String):
 	if(sexActivities.has(id)):
 		return sexActivities[id].new()
 	else:
-		Log.printerr("ERROR: sex activity with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: sex activity with the id "+id+" wasn't found")
 		return null
 
 func getSexActivityReference(id: String):
 	if(sexActivitiesReferences.has(id)):
 		return sexActivitiesReferences[id]
 	else:
-		Log.printerr("ERROR: sex activity with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: sex activity with the id "+id+" wasn't found")
 		return null
 		
 func getSexActivityReferences():
@@ -2073,7 +2162,8 @@ func getScriptsInFolder(folder: String):
 					result.append(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 	
 	return result
 
@@ -2096,7 +2186,8 @@ func getScriptsInSubFolders(folder: String):
 				pass
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 	
 	return result
 
@@ -2119,7 +2210,8 @@ func getScriptsInFoldersRecursive(folder: String, ignoreBaseDir = false):
 				pass
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 	
 	return result
 
@@ -2142,7 +2234,8 @@ func getDatapacksInFolder(folder: String):
 					result.append(full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 	
 	return result
 
@@ -2155,7 +2248,8 @@ func getFetish(id: String):
 	if(fetishes.has(id)):
 		return fetishes[id]
 	else:
-		Log.printerr("ERROR: fetish with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: fetish with the id "+id+" wasn't found")
 		return null
 
 func getFetishes():
@@ -2179,7 +2273,8 @@ func getSexGoal(id: String):
 	if(sexGoals.has(id)):
 		return sexGoals[id]
 	else:
-		Log.printerr("ERROR: sex goal with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: sex goal with the id "+id+" wasn't found")
 		return null
 
 func hasSexGoal(_id:String) -> bool:
@@ -2205,7 +2300,8 @@ func getGameExtender(id: String):
 	if(gameExtenders.has(id)):
 		return gameExtenders[id]
 	else:
-		Log.printerr("ERROR: game extender with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: game extender with the id "+id+" wasn't found")
 		return null
 
 func getGameExtenders():
@@ -2228,14 +2324,16 @@ func getLootTable(id: String):
 	if(lootTables.has(id)):
 		return lootTables[id]
 	else:
-		Log.printerr("ERROR: loot table with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: loot table with the id "+id+" wasn't found")
 		return null
 
 func createLootTable(id: String):
 	if(lootTablesClasses.has(id)):
 		return lootTablesClasses[id].new()
 	else:
-		Log.printerr("ERROR: loot table with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: loot table with the id "+id+" wasn't found")
 		return null
 
 func getLootTables():
@@ -2258,7 +2356,8 @@ func createComputer(id: String):
 	if(computers.has(id)):
 		return computers[id].new()
 	else:
-		Log.printerr("ERROR: computer with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: computer with the id "+id+" wasn't found")
 		return null
 
 func getComputers():
@@ -2280,7 +2379,8 @@ func getFluid(id: String):
 	if(fluids.has(id)):
 		return fluids[id]
 	else:
-		Log.printerr("ERROR: fluid with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: fluid with the id "+id+" wasn't found")
 		return null
 
 func getFluids():
@@ -2303,7 +2403,8 @@ func createSexType(id: String):
 	if(sexTypes.has(id)):
 		return sexTypes[id].new()
 	else:
-		Log.printerr("ERROR: sex type with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: sex type with the id "+id+" wasn't found")
 		return null
 
 func getSexTypes():
@@ -2334,11 +2435,13 @@ func getSkin(id: String):
 		var skinID = splitData[1]
 		
 		if(!datapacks.has(datapackID) || !datapacks[datapackID]["skins"].has(skinID)):
-			Log.printerr("ERROR: skin with the id "+id+" wasn't found")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("ERROR: skin with the id "+id+" wasn't found")
 			return null
 		return datapacks[datapackID]["skins"][skinID]
 	else:
-		Log.printerr("ERROR: skin with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: skin with the id "+id+" wasn't found")
 		return null
 
 func getSkins():
@@ -2390,7 +2493,8 @@ func getPartSkin(partID: String, id: String):
 	if(partSkins[partID].has(id)):
 		return partSkins[partID][id]
 	else:
-		Log.printerr("ERROR: part skin with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: part skin with the id "+id+" wasn't found")
 		return null
 
 func getPartSkins(partID: String):
@@ -2438,14 +2542,16 @@ func createSlaveBreakTask(id: String):
 	if(slaveBreakTasks.has(id)):
 		return slaveBreakTasks[id].new()
 	else:
-		Log.printerr("ERROR: slave break task with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: slave break task with the id "+id+" wasn't found")
 		return null
 
 func getSlaveBreakTaskRef(id: String):
 	if(slaveBreakTaskRefs.has(id)):
 		return slaveBreakTaskRefs[id]
 	else:
-		Log.printerr("ERROR: slave break task with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: slave break task with the id "+id+" wasn't found")
 		return null
 
 func getSlaveBreakTaskRefs():
@@ -2467,7 +2573,8 @@ func getSlaveType(id: String):
 	if(slaveTypes.has(id)):
 		return slaveTypes[id]
 	else:
-		Log.printerr("ERROR: slave type with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: slave type with the id "+id+" wasn't found")
 		return null
 
 func getSlaveTypes():
@@ -2489,7 +2596,8 @@ func getSlaveAction(id: String):
 	if(slaveActions.has(id)):
 		return slaveActions[id]
 	else:
-		Log.printerr("ERROR: slave action with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: slave action with the id "+id+" wasn't found")
 		return null
 
 func getSlaveActions():
@@ -2522,7 +2630,8 @@ func getSlaveEvent(id: String):
 	if(slaveEvents.has(id)):
 		return slaveEvents[id]
 	else:
-		Log.printerr("ERROR: slave event with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: slave event with the id "+id+" wasn't found")
 		return null
 
 func getSlaveEvents():
@@ -2545,7 +2654,8 @@ func createSlaveActivity(id: String):
 	if(slaveActivities.has(id)):
 		return slaveActivities[id].new()
 	else:
-		Log.printerr("ERROR: slave activity with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: slave activity with the id "+id+" wasn't found")
 		return null
 
 
@@ -2553,7 +2663,10 @@ func createSlaveActivity(id: String):
 func getDatapack(id:String) -> Datapack:
 	if(datapacks.has(id)):
 		return datapacks[id]
-	Log.printerr("ERROR: Datapack with the id "+id+" wasn't found")
+
+
+	if OPTIONS.isMainLoggingEnabled():
+		Log.printerr("ERROR: Datapack with the id "+id+" wasn't found")
 	return null
 
 func getDatapacks():
@@ -2573,13 +2686,16 @@ func loadDatapacksFromFolder(folder: String):
 				newDatapack.id = Util.stripBadCharactersFromID(newDatapack.id)
 				
 				if(datapacks.has(newDatapack.id)):
-					Log.printerr("ERROR: Datapack id collision, two or more datapacks have the same id '"+str(newDatapack.id)+"'")
+					if OPTIONS.isMainLoggingEnabled():
+						Log.printerr("ERROR: Datapack id collision, two or more datapacks have the same id '"+str(newDatapack.id)+"'")
 				else:
 					datapacks[newDatapack.id] = newDatapack
 			else:
-				Log.printerr("Found datapack that is not of a right type at path: '"+str(possiblePackPath)+"'")
+				if OPTIONS.isMainLoggingEnabled():
+					Log.printerr("Found datapack that is not of a right type at path: '"+str(possiblePackPath)+"'")
 		else:
-			Log.printerr("Found bad datapack at path: '"+str(possiblePackPath)+"'")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Found bad datapack at path: '"+str(possiblePackPath)+"'")
 
 func reloadPacks():
 	datapacks.clear()
@@ -2613,14 +2729,16 @@ func createInteraction(id: String):
 	if(interactions.has(id)):
 		return interactions[id].new()
 	else:
-		Log.printerr("ERROR: interaction with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: interaction with the id "+id+" wasn't found")
 		return null
 
 func getInteractionRef(id: String):
 	if(interactionRefs.has(id)):
 		return interactionRefs[id]
 	else:
-		Log.printerr("ERROR: interaction with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: interaction with the id "+id+" wasn't found")
 		return null
 
 func getInteractions():
@@ -2644,7 +2762,8 @@ func createGlobalTask(id: String):
 	if(globalTasks.has(id)):
 		return globalTasks[id].new()
 	else:
-		Log.printerr("ERROR: global task with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: global task with the id "+id+" wasn't found")
 		return null
 		
 func getGlobalTasks():
@@ -2667,7 +2786,8 @@ func getRepStat(id: String):
 	if(repStats.has(id)):
 		return repStats[id]
 	else:
-		Log.printerr("ERROR: reputation stat with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: reputation stat with the id "+id+" wasn't found")
 		return null
 		
 func getRepStats():
@@ -2693,14 +2813,16 @@ func getAuctionTrait(id: String):
 	if(auctionTraitsRefs.has(id)):
 		return auctionTraitsRefs[id]
 	else:
-		Log.printerr("ERROR: auction trait with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: auction trait with the id "+id+" wasn't found")
 		return null
 
 func createAuctionTrait(id: String):
 	if(auctionTraits.has(id)):
 		return auctionTraits[id].new()
 	else:
-		Log.printerr("ERROR: auction trait with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: auction trait with the id "+id+" wasn't found")
 		return null
 		
 func getAuctionTraits():
@@ -2725,7 +2847,8 @@ func getAuctionAction(id: String):
 	if(auctionActions.has(id)):
 		return auctionActions[id]
 	else:
-		Log.printerr("ERROR: auction action with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: auction action with the id "+id+" wasn't found")
 		return null
 		
 func getAuctionActions():
@@ -2748,7 +2871,8 @@ func getPawnType(id: String):
 	if(pawnTypes.has(id)):
 		return pawnTypes[id]
 	else:
-		Log.printerr("ERROR: pawn type with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: pawn type with the id "+id+" wasn't found")
 		return null
 		
 func getPawnTypes():
@@ -2771,14 +2895,16 @@ func getTransformationRef(id: String):
 	if(transformationRefs.has(id)):
 		return transformationRefs[id]
 	else:
-		Log.printerr("ERROR: transformation with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: transformation with the id "+id+" wasn't found")
 		return null
 		
 func createTransformation(id: String):
 	if(transformations.has(id)):
 		return transformations[id].new()
 	else:
-		Log.printerr("ERROR: transformation with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: transformation with the id "+id+" wasn't found")
 		return null
 		
 func getTransformationRefs():
@@ -2800,7 +2926,8 @@ func createTransformationEffect(id: String):
 	if(transformationEffects.has(id)):
 		return transformationEffects[id].new()
 	else:
-		Log.printerr("ERROR: transformation effect with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: transformation effect with the id "+id+" wasn't found")
 		return null
 		
 func getTransformationEffects():
@@ -2825,7 +2952,8 @@ func createNurseryTask(id: String):
 	if(nurseryTasks.has(id)):
 		return nurseryTasks[id].new()
 	else:
-		Log.printerr("ERROR: nursery task with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: nursery task with the id "+id+" wasn't found")
 		return null
 		
 func getNurseryTasks():
@@ -2848,14 +2976,16 @@ func createDrugDenEvent(id: String):
 	if(drugDenEvents.has(id)):
 		return drugDenEvents[id].new()
 	else:
-		Log.printerr("ERROR: drug den event with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: drug den event with the id "+id+" wasn't found")
 		return null
 
 func getDrugDenEventRef(id: String):
 	if(drugDenEventRefs.has(id)):
 		return drugDenEventRefs[id]
 	else:
-		Log.printerr("ERROR: drug den event with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: drug den event with the id "+id+" wasn't found")
 		return null
 		
 func getDrugDenEvents():
@@ -2900,7 +3030,8 @@ func getPlayerSlaveryDef(id: String):
 	if(playerSlaveryDefs.has(id)):
 		return playerSlaveryDefs[id]
 	else:
-		Log.printerr("ERROR: player slavery with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: player slavery with the id "+id+" wasn't found")
 		return null
 		
 func getPlayerSlaveryDefs():
@@ -2924,14 +3055,16 @@ func createSpecialRelationship(id: String):
 	if(specialRelationships.has(id)):
 		return specialRelationships[id].new()
 	else:
-		Log.printerr("ERROR: special relationship with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: special relationship with the id "+id+" wasn't found")
 		return null
 
 func getSpecialRelationshipRef(id: String):
 	if(specialRelationshipRefs.has(id)):
 		return specialRelationshipRefs[id]
 	else:
-		Log.printerr("ERROR: special relationship with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: special relationship with the id "+id+" wasn't found")
 		return null
 		
 func getSpecialRelationships():
@@ -2955,14 +3088,16 @@ func createNpcOwnerType(id: String):
 	if(npcOwners.has(id)):
 		return npcOwners[id].new()
 	else:
-		Log.printerr("ERROR: npc owner type with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: npc owner type with the id "+id+" wasn't found")
 		return null
 
 func getNpcOwnerTypeRef(id: String):
 	if(npcOwnerRefs.has(id)):
 		return npcOwnerRefs[id]
 	else:
-		Log.printerr("ERROR: npc owner type with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: npc owner type with the id "+id+" wasn't found")
 		return null
 		
 func getNpcOwnerTypes():
@@ -2989,7 +3124,8 @@ func createNpcOwnerEvent(id: String):
 	if(npcOwnerEvents.has(id)):
 		return npcOwnerEvents[id].new()
 	else:
-		Log.printerr("ERROR: npc owner event with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: npc owner event with the id "+id+" wasn't found")
 		return null
 
 func getNpcOwnerEvents():
@@ -3016,7 +3152,8 @@ func getNpcOwnerTrait(id: String):
 	if(npcOwnerTraits.has(id)):
 		return npcOwnerTraits[id]
 	else:
-		Log.printerr("ERROR: npc owner trait with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: npc owner trait with the id "+id+" wasn't found")
 		return null
 
 func getNpcOwnerTraits():
@@ -3038,7 +3175,8 @@ func createRecruit(id: String):
 	if(recruits.has(id)):
 		return recruits[id].new()
 	else:
-		Log.printerr("ERROR: recruit with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: recruit with the id "+id+" wasn't found")
 		return null
 
 func getRecruits():
@@ -3065,7 +3203,8 @@ func getMission(id: String):
 	if(missions.has(id)):
 		return missions[id]
 	else:
-		Log.printerr("ERROR: mission with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: mission with the id "+id+" wasn't found")
 		return null
 
 func getMissions():
@@ -3087,7 +3226,8 @@ func getContentBoardEntry(id: String):
 	if(contentBoardEntries.has(id)):
 		return contentBoardEntries[id]
 	else:
-		Log.printerr("ERROR: board entry with the id "+id+" wasn't found")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ERROR: board entry with the id "+id+" wasn't found")
 		return null
 
 func getContentBoardEntries():

@@ -733,7 +733,8 @@ func goToSlow(_startLoc:String, theTargetLoc:String) -> String:
 	if(theTargetLoc == "pc"):
 		theTargetLoc = GM.pc.getLocation()
 	if(theTargetLoc.empty()):
-		Log.printerr("EMPTY TARGET LOC")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("EMPTY TARGET LOC")
 		return _startLoc
 	if(_startLoc == theTargetLoc):
 		return theTargetLoc

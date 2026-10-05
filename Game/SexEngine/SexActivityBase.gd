@@ -751,25 +751,29 @@ func addStartAction(_aArgs:Array, _aName:String, _aDesc:String, _aScore:float, _
 
 func getSubInfo(_indx:int = 0) -> SexSubInfo:
 	if(_indx < 0 || _indx >= subs.size()):
-		Log.printerr("Sex activity with ID "+str(id)+" tries to access non-existant sub info with index "+str(_indx))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Sex activity with ID "+str(id)+" tries to access non-existant sub info with index "+str(_indx))
 		return null
 	return subs[_indx]
 	
 func getDomInfo(_indx:int = 0) -> SexDomInfo:
 	if(_indx < 0 || _indx >= doms.size()):
-		Log.printerr("Sex activity with ID "+str(id)+" tries to access non-existant dom info with index "+str(_indx))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Sex activity with ID "+str(id)+" tries to access non-existant dom info with index "+str(_indx))
 		return null
 	return doms[_indx]
 
 func getSubID(_indx:int = 0) -> String:
 	if(_indx < 0 || _indx >= subs.size()):
-		Log.printerr("Sex activity with ID "+str(id)+" tries to access non-existant sub with index "+str(_indx))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Sex activity with ID "+str(id)+" tries to access non-existant sub with index "+str(_indx))
 		return ""
 	return subs[_indx].charID
 
 func getDomID(_indx:int = 0) -> String:
 	if(_indx < 0 || _indx >= doms.size()):
-		Log.printerr("Sex activity with ID "+str(id)+" tries to access non-existant dom with index "+str(_indx))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Sex activity with ID "+str(id)+" tries to access non-existant dom with index "+str(_indx))
 		return ""
 	return doms[_indx].charID
 
@@ -981,7 +985,8 @@ func replaceRandomGoalSmart(_domIndx:int, _subIndx:int, _goalID:String) -> bool:
 	if(domGoalsGoalToIndx.empty()):
 		var theGoalData = theGoal.generateData(getSexEngine(), theDomInfo, theSubInfo)
 		theDomInfo.goals.append([_goalID, theSubInfo.getCharID(), theGoalData])
-		print("NO GOALS FOUND TO REPLACE. JUST ADDED A NEW GOAL.")
+		if OPTIONS.isMainLoggingEnabled():
+			print("NO GOALS FOUND TO REPLACE. JUST ADDED A NEW GOAL.")
 		return true
 	
 	# We go through each activity that involves the two chars
@@ -999,7 +1004,8 @@ func replaceRandomGoalSmart(_domIndx:int, _subIndx:int, _goalID:String) -> bool:
 				theDomInfo.goals.remove(goalIndxToRemove)
 				var theGoalData = theGoal.generateData(getSexEngine(), theDomInfo, theSubInfo)
 				theDomInfo.goals.append([_goalID, theSubInfo.getCharID(), theGoalData])
-				print("REPLACED THE CURRENT GOAL AND ADDED A NEW ONE.")
+				if OPTIONS.isMainLoggingEnabled():
+					print("REPLACED THE CURRENT GOAL AND ADDED A NEW ONE.")
 				return true
 	
 	#Remove random goal
@@ -1008,7 +1014,8 @@ func replaceRandomGoalSmart(_domIndx:int, _subIndx:int, _goalID:String) -> bool:
 	
 	var theGoalData = theGoal.generateData(getSexEngine(), theDomInfo, theSubInfo)
 	theDomInfo.goals.append([_goalID, theSubInfo.getCharID(), theGoalData])
-	print("REMOVED RANDOM GOAL AND ADDED A NEW ONE.")
+	if OPTIONS.isMainLoggingEnabled():
+		print("REMOVED RANDOM GOAL AND ADDED A NEW ONE.")
 	return true
 
 func canStartActivity(_sexEngine: SexEngine, _domInfo: SexDomInfo, _subInfo: SexSubInfo):
@@ -1287,21 +1294,25 @@ func isHandlingOrgasms(_indx:int) -> bool:
 
 func getResistScore(_indx:int) -> float:
 	if(_indx >= 0):
-		assert(false, "getResistScore function can only be called for subs!")
+		if OPTIONS.isMainLoggingEnabled():
+			assert(false, "getResistScore function can only be called for subs!")
 		return 0.0
 	var theInfo := getDomOrSubInfo(_indx)
 	if(!theInfo):
-		Log.printerr("getResistScore: No character with id "+str(_indx)+" found in the sex activity")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getResistScore: No character with id "+str(_indx)+" found in the sex activity")
 		return 0.0
 	return theInfo.getResistScore()
 
 func getComplyScore(_indx:int) -> float:
 	if(_indx >= 0):
-		assert(false, "getComplyScore function can only be called for subs!")
+		if OPTIONS.isMainLoggingEnabled():
+			assert(false, "getComplyScore function can only be called for subs!")
 		return 0.0
 	var theInfo := getDomOrSubInfo(_indx)
 	if(!theInfo):
-		Log.printerr("getComplyScore: No character with id "+str(_indx)+" found in the sex activity")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("getComplyScore: No character with id "+str(_indx)+" found in the sex activity")
 		return 0.0
 	return theInfo.getComplyScore()
 

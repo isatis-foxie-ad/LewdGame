@@ -77,7 +77,8 @@ func setVariables(_data:Dictionary):
 		elif(type == "stringID"):
 			newWidget = preload("res://Game/Datapacks/UI/PackVarUIs/StringVarIDUI.tscn").instance()
 		else:
-			Log.printerr("Unknown var type found: "+str(type))
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Unknown var type found: "+str(type))
 
 		if(newWidget != null):
 			if(dataLine.has("collapsable") && dataLine["collapsable"]):

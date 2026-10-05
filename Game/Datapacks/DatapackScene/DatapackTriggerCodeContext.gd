@@ -175,7 +175,8 @@ func addDisabledButton(_nameText, _descText):
 
 func onButton(_method, _args):
 	if(!buttons.has(_method)):
-		Log.printerr("Was unable to find code for the "+str(_method)+" button")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Was unable to find code for the "+str(_method)+" button")
 		return
 	
 	reactMode = true

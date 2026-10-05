@@ -66,7 +66,8 @@ func fillFolder(root:TreeItem, folder, filter):
 					child1.set_metadata(0, full_path)
 			file_name = dir.get_next()
 	else:
-		Log.printerr("An error occurred when trying to access the path "+folder)
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("An error occurred when trying to access the path "+folder)
 
 
 func _on_Button_pressed():
@@ -98,20 +99,23 @@ func addSelected(selected):
 	var path = metadata
 	var dir = Directory.new()
 	if(dir.dir_exists(path)):
-		print(path)
+		if OPTIONS.isMainLoggingEnabled():
+			print(path)
 		addFilesRec(path)
 		updateAddedFiles()
 		return
 	
 	var file = File.new()
 	if(file.file_exists(path)):
-		print(path)
+		if OPTIONS.isMainLoggingEnabled():
+			print(path)
 		if(!addedFiles.has(path)):
 			addedFiles.append(path)
 			updateAddedFiles()
 		return
 	
-	print("NOT FOUND")
+	if OPTIONS.isMainLoggingEnabled():
+		print("NOT FOUND")
 
 func addFilesRec(folder):
 	var dir = Directory.new()
@@ -144,7 +148,8 @@ func _on_RemoveFilesButton_pressed():
 
 
 func _on_MakeModButton_pressed():
-	print(exportModeSelector.selected)
+	if OPTIONS.isMainLoggingEnabled():
+		print(exportModeSelector.selected)
 	
 	#if(exportModeSelector.selected == 0):
 	#	useTar()
@@ -181,7 +186,8 @@ func useTar():
 					var newPath2:String = importFile.replace("res://",newModFolder+"/")
 					directory.make_dir_recursive(newPath2.get_base_dir())
 					directory.copy(importFile, newPath2)
-					print("Also exported as dependency "+importFile)
+					if OPTIONS.isMainLoggingEnabled():
+						print("Also exported as dependency "+importFile)
 					
 		var newPath:String = file.replace("res://",newModFolder+"/")
 		directory.make_dir_recursive(newPath.get_base_dir())
@@ -191,7 +197,8 @@ func useTar():
 	
 	#var _ok = OS.execute('tar', ['-a', '-cf', ProjectSettings.globalize_path("user://exported_mods/".plus_file(modName+".zip")), "-C", ProjectSettings.globalize_path(newModFolder), "*", '.import/', '--force-local'], true, output, true)
 	var _ok = OS.execute('powershell', ['Compress-Archive', ProjectSettings.globalize_path(newModFolder).plus_file("*"), ProjectSettings.globalize_path("user://exported_mods/".plus_file(modName+".zip"))], true, output, true)
-	print(output)
+	if OPTIONS.isMainLoggingEnabled():
+		print(output)
 	
 	Util.removeDirectory(newModFolder)
 	
@@ -225,7 +232,8 @@ func gatherFiles():
 					var newPath2:String = importFile.replace("res://",newModFolder+"/")
 					directory.make_dir_recursive(newPath2.get_base_dir())
 					directory.copy(importFile, newPath2)
-					print("Also exported as dependency "+importFile)
+					if OPTIONS.isMainLoggingEnabled():
+						print("Also exported as dependency "+importFile)
 					
 		var newPath:String = file.replace("res://",newModFolder+"/")
 		directory.make_dir_recursive(newPath.get_base_dir())
@@ -253,7 +261,8 @@ func makePCKFile():
 				if(config.has_section_key("remap", "path")):
 					var importFile = config.get_value("remap", "path")
 					packer.add_file(importFile, importFile)
-					print("Also exported as dependency "+importFile)
+					if OPTIONS.isMainLoggingEnabled():
+						print("Also exported as dependency "+importFile)
 					
 		packer.add_file(file, file)
 	packer.flush()
@@ -271,6 +280,7 @@ func _on_Tree_multi_selected(_item, _column, _selected):
 		selectedAr.append(thingie)
 		thingie = tree.get_next_selected(thingie)
 	
-	print(selectedAr)
+	if OPTIONS.isMainLoggingEnabled():
+		print(selectedAr)
 
 	#print("BEGIN ", tree.get_selected(), " END ", tree.get_end())

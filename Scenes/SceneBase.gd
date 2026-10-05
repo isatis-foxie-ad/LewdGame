@@ -33,7 +33,8 @@ func _react(_action: String, _args):
 		
 	#	callv(method, [_args])
 	#else:
-	#	print("Error: method with the name '"+method+"' is not found in "+name + " ("+sceneID+")")
+	#	if OPTIONS.isMainLoggingEnabled():
+	#		print("Error: method with the name '"+method+"' is not found in "+name + " ("+sceneID+")")
 
 func _react_scene_end(_tag, _result):
 	pass
@@ -86,7 +87,8 @@ func checkSceneEnded():
 		_onSceneEnd()
 		GM.main.removeScene(self, sceneEndedArgs)
 		emit_signal("sceneEnded", sceneEndedArgs)
-		print("removing scene "+name)
+		if OPTIONS.isMainLoggingEnabled():
+			print("removing scene "+name)
 		
 		if(!sceneSavedItemsInv.isEmpty()):
 			var newItems = []

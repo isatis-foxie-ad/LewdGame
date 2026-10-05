@@ -29,7 +29,8 @@ func doOutputError(_codeBlock, errorText):
 	doOutput("[color=red]Line "+str(_codeBlock.lineNum)+": "+errorText+"[/color]")
 
 func _on_ExecuteButton_pressed():
-	print(mainSlotCalls.getBlocks())
+	if OPTIONS.isMainLoggingEnabled():
+		print(mainSlotCalls.getBlocks())
 	codeContex.execute(mainSlotCalls)
 
 func getPossiblePrintStrings():

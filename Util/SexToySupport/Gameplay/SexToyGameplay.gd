@@ -31,10 +31,14 @@ func sendTrigger(_triggerID:int, _args:Array = []):
 
 func processGameplay(_dt:float):
 	if((GM.pc && is_instance_valid(GM.pc)) && !inGame):
-		#Log.print("IN GAMEEEE")
+		if OPTIONS.isMainLoggingEnabled():
+			pass
+			#Log.print("IN GAMEEEE")
 		inGame = true
 	elif((!GM.pc || !is_instance_valid(GM.pc)) && inGame):
-		#Log.print("NO LONGER IN GAME!!!")
+		if OPTIONS.isMainLoggingEnabled():
+			pass
+			#Log.print("NO LONGER IN GAME!!!")
 		inGame = false
 		stopAllPassiveTriggers()
 		return

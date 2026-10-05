@@ -116,7 +116,8 @@ func updateRoomSprite():
 		$Sprite.texture = null
 		return
 	if(!sprites.has(roomSprite)):
-		Log.printerr("ROOM SPRITE NOT FOUND: "+str(roomSprite))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("ROOM SPRITE NOT FOUND: "+str(roomSprite))
 		return
 	$Sprite.texture = sprites[roomSprite]
 

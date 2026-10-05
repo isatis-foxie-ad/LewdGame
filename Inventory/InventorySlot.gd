@@ -50,7 +50,8 @@ const DEFAULT_SLOTS_NO_UNDRESS_SEXENGINE:Dictionary = {
 
 static func getAll() -> Array:
 	if(GlobalRegistry.cachedInventorySlotsList.empty()):
-		Log.printerr("InventorySlot.getAll() got called before the cached list got populated with values!")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("InventorySlot.getAll() got called before the cached list got populated with values!")
 		return DEFAULT_SLOTS # Fallback
 
 	return GlobalRegistry.cachedInventorySlotsList

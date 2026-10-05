@@ -262,7 +262,8 @@ func about_to_sex_do(_id:String, _args:Dictionary, _context:Dictionary):
 			else:
 				clientSatisfaction = _result.getDomSatisfaction(getRoleID("client"))
 		else:
-			Log.printerr("Prostitution interaction received null sex result")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("Prostitution interaction received null sex result")
 		setState("after_sex", "client")
 
 

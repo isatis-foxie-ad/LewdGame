@@ -274,7 +274,8 @@ func equipItem(item) -> bool:
 	var slot:String = item.getClothingSlotSafe()
 	
 	if(equippedItems.has(slot)):
-		Log.printerr("Trying to equip an item to slot "+str(slot)+" when there is already an item")
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("Trying to equip an item to slot "+str(slot)+" when there is already an item")
 		return false
 		#assert(false)
 	
@@ -749,10 +750,12 @@ func removeBrokenDuplicatedItems():
 			seenIDS[item.uniqueID] = true
 	
 	for item in itemsToRemove:
-		Log.printerr("REMOVING DUBLICATED ITEM: "+item.id+" UNIQUE ID: "+str(item.uniqueID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("REMOVING DUBLICATED ITEM: "+item.id+" UNIQUE ID: "+str(item.uniqueID))
 		removeItem(item)
 	for equippedItem in equippedItemsToRemove:
-		Log.printerr("REMOVING DUBLICATED ITEM: "+equippedItem.id+" UNIQUE ID: "+str(equippedItem.uniqueID))
+		if OPTIONS.isMainLoggingEnabled():
+			Log.printerr("REMOVING DUBLICATED ITEM: "+equippedItem.id+" UNIQUE ID: "+str(equippedItem.uniqueID))
 		removeEquippedItem(equippedItem)
 
 func removeRandomRestraints(removedRestraintsChance:float) -> int:
@@ -869,7 +872,8 @@ func loadData(data:Dictionary):
 		
 		var newItem: ItemBase = GlobalRegistry.createItem(id, false)
 		if(!newItem):
-			Log.printerr("ITEM WITH ID "+str(id)+" WASN'T FOUND IN REGISTRY")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("ITEM WITH ID "+str(id)+" WASN'T FOUND IN REGISTRY")
 			continue
 		if(uniqueID == null || uniqueID == ""):
 			uniqueID = "item"+str(GlobalRegistry.generateUniqueID())
@@ -888,7 +892,8 @@ func loadData(data:Dictionary):
 		
 		var newItem: ItemBase = GlobalRegistry.createItem(id, false)
 		if(!newItem):
-			Log.printerr("ITEM WITH ID "+str(id)+" WASN'T FOUND IN REGISTRY")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("ITEM WITH ID "+str(id)+" WASN'T FOUND IN REGISTRY")
 			continue
 		if(uniqueID == null || uniqueID == ""):
 			uniqueID = "item"+str(GlobalRegistry.generateUniqueID())
@@ -922,7 +927,8 @@ func loadDataNPC(data:Dictionary, npc):
 		
 		var newItem: ItemBase = GlobalRegistry.createItem(id, false)
 		if(!newItem):
-			Log.printerr("ITEM WITH ID "+str(id)+" WASN'T FOUND IN REGISTRY")
+			if OPTIONS.isMainLoggingEnabled():
+				Log.printerr("ITEM WITH ID "+str(id)+" WASN'T FOUND IN REGISTRY")
 			continue
 		newItem.uniqueID = uniqueID
 		newItem.loadData(itemLoadedData)
@@ -948,7 +954,8 @@ func loadDataNPC(data:Dictionary, npc):
 			if(!hasSlotEquipped(loadedSlot)):
 				var newItem: ItemBase = GlobalRegistry.createItem(id, false)
 				if(newItem == null):
-					Log.printerr("ITEM WITH ID "+str(id)+" WASN'T FOUND IN REGISTRY")
+					if OPTIONS.isMainLoggingEnabled():
+						Log.printerr("ITEM WITH ID "+str(id)+" WASN'T FOUND IN REGISTRY")
 					continue
 				newItem.uniqueID = uniqueID
 				newItem.loadData(itemLoadedData)
