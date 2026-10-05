@@ -1567,8 +1567,8 @@ func saveToFile():
 func loadFromFile():
 	var save_game = File.new()
 	if not save_game.file_exists(optionsFilepath):
-		if OPTIONS.isMainLoggingEnabled():
-			print("GlobalOptions: No saved options found, default values will be used")
+		#if (OPTIONS.isMainLoggingEnabled()):
+		#	print("GlobalOptions: No saved options found, default values will be used")
 		return
 	
 	save_game.open(optionsFilepath, File.READ)

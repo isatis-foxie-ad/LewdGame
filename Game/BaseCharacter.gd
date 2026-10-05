@@ -2946,7 +2946,7 @@ func applyRandomColors():
 		pickedSkinGColor = skinColors[1]
 		pickedSkinBColor = skinColors[2]
 
-func applyRandomSkin():
+func applyRandomSkin(_testThingy: String = "meow?"):
 	var species:Array = getSpecies()
 	var possibleSkins:Array = []
 	for speciesOne in species:
@@ -2954,20 +2954,33 @@ func applyRandomSkin():
 		if(!theSpecies):
 			continue
 		var skinType = theSpecies.getSkinType()
-		
 		for skinID in GlobalRegistry.getSkinsAllKeys():
 			var theSkin = GlobalRegistry.getSkin(skinID)
 			var fittingSkinTypes = theSkin.getFittingSkinTypes()
-			if(fittingSkinTypes is Dictionary && fittingSkinTypes.has(skinType)):
-				possibleSkins.append([skinID, fittingSkinTypes[skinType]])
+			var _handled = false
+			if ( theSkin.isPickableByNPC() ):
+				_handled = true
+				if(fittingSkinTypes is Dictionary && fittingSkinTypes.has(skinType)):
+					possibleSkins.append([skinID, fittingSkinTypes[skinType]])
+					
+			if _testThingy != "NPC":
+				if (theSkin.isPickable() and _handled == false):
+					_handled = true
+					if(fittingSkinTypes is Dictionary && fittingSkinTypes.has(skinType)):
+						print(_testThingy)
+						possibleSkins.append([skinID, fittingSkinTypes[skinType]])
+				
+			if _handled == false:
+				if(fittingSkinTypes is Dictionary && fittingSkinTypes.has(skinType)):
+					possibleSkins.append([skinID, fittingSkinTypes[skinType]])
 	
 	var newSkin = RNG.pickWeightedPairs(possibleSkins)
 	
 	if(newSkin != null):
 		pickedSkin = newSkin
 
-func applyRandomSkinAndColors():
-	applyRandomSkin()
+func applyRandomSkinAndColors(_testThingy: String = "PC?"):
+	applyRandomSkin(_testThingy)
 	applyRandomColors()
 
 func applyRandomSkinAndColorsAndParts():

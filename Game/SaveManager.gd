@@ -337,6 +337,7 @@ func loadGameInformationFromSave(_path):
 	if(theInfo != null):
 		saveInfoCache[_path] = theInfo
 		if OPTIONS.isMainLoggingEnabled():
+			pass
 			#Log.print("CREATED SAVE INFO CACHE FOR: "+str(_path))
 		triggerSaveCacheSave()
 	return theInfo

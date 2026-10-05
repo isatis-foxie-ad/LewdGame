@@ -58,7 +58,7 @@ func pickSpecies(character:DynamicCharacter, _args = {}):
 	var possible = []
 	for speciesID in allSpecies:
 		var specie = allSpecies[speciesID]
-		# print(!specie.canBeUsedForNPCType(speciesType))
+		
 		if(!specie.canBeUsedForNPCType(speciesType)):
 			continue
 		
@@ -73,7 +73,7 @@ func pickSpecies(character:DynamicCharacter, _args = {}):
 	character.npcSpecies = [randomSpecies]
 
 func pickSkinAndColors(character:DynamicCharacter, _args = {}):
-	character.applyRandomSkinAndColors()
+	character.applyRandomSkinAndColors("NPC")
 
 func createBodyparts(character:DynamicCharacter, _args = {}):
 	var theSpecies:Array = character.npcSpecies

@@ -18,6 +18,7 @@ var statusEffects = []
 var worldEdits = []
 var gameExtenders = []
 var computers = []
+var skins = []
 var partSkins = []
 var stageScenes = []
 var lootTables = []
@@ -39,6 +40,12 @@ var id = "badmodule"
 var author = "no author"
 var flagsCache = null
 
+func _res(string: String) -> String:
+	if string.begins_with("res://"):
+		return string
+	return "res://"+string
+	
+	
 func _init():
 	flagsCache = getFlags()
 
@@ -63,100 +70,103 @@ func register():
 	var theAuthorName:String = getAuthorName()
 	
 	for scene in scenes:
-		GlobalRegistry.registerScene(scene, author)
+		GlobalRegistry.registerScene(_res(scene), author)
 	
 	for character in characters:
-		GlobalRegistry.registerCharacter(character)
+		GlobalRegistry.registerCharacter(_res(character))
 	
 	for item in items:
-		GlobalRegistry.registerItem(item)
+		GlobalRegistry.registerItem(_res(item))
 	
 	for event in events:
-		GlobalRegistry.registerEvent(event)
+		GlobalRegistry.registerEvent(_res(event))
 
 	for quest in quests:
-		GlobalRegistry.registerQuest(quest)
+		GlobalRegistry.registerQuest(_res(quest))
 		
 	for attack in attacks:
-		GlobalRegistry.registerAttack(attack)
+		GlobalRegistry.registerAttack(_res(attack))
 		
 	for bodypart in bodyparts:
-		GlobalRegistry.registerBodypart(bodypart, theAuthorName)
+		GlobalRegistry.registerBodypart(_res(bodypart), theAuthorName)
 	
 	for specie in species:
-		GlobalRegistry.registerSpecies(specie)
+		GlobalRegistry.registerSpecies(_res(specie))
 		
 	for skill in skills:
-		GlobalRegistry.registerSkill(skill)
+		GlobalRegistry.registerSkill(_res(skill))
 		
 	for perk in perks:
-		GlobalRegistry.registerPerk(perk)
+		GlobalRegistry.registerPerk(_res(perk))
 	
 	for lustAction in lustActions:
-		GlobalRegistry.registerLustAction(lustAction)
+		GlobalRegistry.registerLustAction(_res(lustAction))
 	
 	for buff in buffs:
-		GlobalRegistry.registerBuff(buff)
+		GlobalRegistry.registerBuff(_res(buff))
 		
 	for statusEffect in statusEffects:
-		GlobalRegistry.registerStatusEffect(statusEffect)
+		GlobalRegistry.registerStatusEffect(_res(statusEffect))
 
 	for worldEdit in worldEdits:
-		GlobalRegistry.registerWorldEdit(worldEdit)
+		GlobalRegistry.registerWorldEdit(_res(worldEdit))
 	
 	for gameExtender in gameExtenders:
-		GlobalRegistry.registerGameExtender(gameExtender)
+		GlobalRegistry.registerGameExtender(_res(gameExtender))
 	
 	for computer in computers:
-		GlobalRegistry.registerComputer(computer)
+		GlobalRegistry.registerComputer(_res(computer))
 
+	for skin in skins:
+		GlobalRegistry.registerSkin(_res(skin), theAuthorName)
+		
 	for partSkin in partSkins:
-		GlobalRegistry.registerPartSkin(partSkin)
+		GlobalRegistry.registerPartSkin(_res(partSkin))
 		
 	for stageScene in stageScenes:
-		GlobalRegistry.registerStageScene(stageScene)
+		GlobalRegistry.registerStageScene(_res(stageScene))
 		
 	for lootTable in lootTables:
-		GlobalRegistry.registerLootTable(lootTable)
+		GlobalRegistry.registerLootTable(_res(lootTable))
 		
 	for lootList in lootLists:
-		GlobalRegistry.registerLootList(lootList)
+		GlobalRegistry.registerLootList(_res(lootList))
 		
 	for fetish in fetishes:
-		GlobalRegistry.registerFetish(fetish)
+		GlobalRegistry.registerFetish(_res(fetish))
 		
 	for sexGoal in sexGoals:
-		GlobalRegistry.registerSexGoal(sexGoal)
+		GlobalRegistry.registerSexGoal(_res(sexGoal))
 		
 	for sexActivity in sexActivities:
-		GlobalRegistry.registerSexActivity(sexActivity)
+		GlobalRegistry.registerSexActivity(_res(sexActivity))
 		
 	for sexType in sexTypes:
-		GlobalRegistry.registerSexType(sexType)
+		GlobalRegistry.registerSexType(_res(sexType))
 		
 	for fluid in fluids:
-		GlobalRegistry.registerFluid(fluid)
+		GlobalRegistry.registerFluid(_res(fluid))
 		
 	for speechModifier in speechModifiers:
-		GlobalRegistry.registerSpeechModifier(speechModifier)
+		GlobalRegistry.registerSpeechModifier(_res(speechModifier))
 
 	for slaveBreakTask in slaveBreakTasks:
-		GlobalRegistry.registerSlaveBreakTask(slaveBreakTask)
+		GlobalRegistry.registerSlaveBreakTask(_res(slaveBreakTask))
 	
 	for slaveType in slaveTypes:
-		GlobalRegistry.registerSlaveType(slaveType)
+		GlobalRegistry.registerSlaveType(_res(slaveType))
 		
 	for slaveAction in slaveActions:
-		GlobalRegistry.registerSlaveAction(slaveAction)
+		GlobalRegistry.registerSlaveAction(_res(slaveAction))
 		
 	for slaveEvent in slaveEvents:
-		GlobalRegistry.registerSlaveEvent(slaveEvent)
+		GlobalRegistry.registerSlaveEvent(_res(slaveEvent))
 		
 	for slaveActivity in slaveActivities:
-		GlobalRegistry.registerSlaveActivity(slaveActivity)
+		GlobalRegistry.registerSlaveActivity(_res(slaveActivity))
 
 	for sexReactionHandler in sexReactionHandlers:
-		GlobalRegistry.registerSexReactionHandler(sexReactionHandler)
+		GlobalRegistry.registerSexReactionHandler(_res(sexReactionHandler))
 
 func registerEventTriggers():
 	pass

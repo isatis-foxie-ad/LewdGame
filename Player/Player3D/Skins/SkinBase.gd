@@ -26,3 +26,10 @@ func getExtraDesc():
 	if(result.empty()):
 		return ""
 	return "\n"+Util.join(result, "\n")
+
+
+func isPickable() -> bool:
+	return true
+
+func isPickableByNPC() -> bool:
+	return true
